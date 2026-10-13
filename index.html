@@ -285,7 +285,7 @@
     </div>
 
     <div class="live-bar">
-        <span>CoreStream Vaktari Virkur (Efnisnámskerfi)</span>
+        <span>CoreStream Vaktari Virkur</span>
         <span id="videoCount">0 tenglar</span>
     </div>
 
@@ -327,7 +327,6 @@
 </div>
 
 <script>
-    // Upphaflegt safn fyrir allar 10 veiturnar
     const defaultSeedData = [
         { id: "seed_1", title: "SpaceX Starship Orbital Test Flight", author: "SpaceX", platform: "youtube", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
         { id: "seed_2", title: "World Esports Finals Live Stream", author: "ESL Gaming", platform: "twitch", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" },
@@ -335,18 +334,17 @@
         { id: "seed_4", title: "Deep Space Exploration & Astronomy", author: "Vimeo Science", platform: "vimeo", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop", embed: "https://player.vimeo.com/video/76979871" },
         { id: "seed_5", title: "Independent Tech & Hardware Analysis", author: "TechRumble", platform: "rumble", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop", embed: "https://rumble.com" },
         { id: "seed_6", title: "High Octane FPS Gaming Finals", author: "KickStreamer", platform: "kick", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&auto=format&fit=crop", embed: "https://kick.com" },
-        { id: "7", title: "PeerTube Open Source Media Documentary", author: "PeerTube", platform: "peertube", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop", embed: "https://joinpeertube.org" },
-        { id: "8", title: "Global Electro & Jazz Music Live Sessions", author: "Dailymotion Sound", platform: "dailymotion", category: "music", time: Date.now(), thumb: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop", embed: "https://www.dailymotion.com" },
-        { id: "9", title: "Freedom & Open Source Software Debate", author: "BitChute Media", platform: "bitchute", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format&fit=crop", embed: "https://www.bitchute.com" },
-        { id: "10", title: "Playeur Creator Exclusive Showcase", author: "Playeur HQ", platform: "playeur", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop", embed: "https://playeur.com" }
+        { id: "seed_7", title: "PeerTube Open Source Media Documentary", author: "PeerTube", platform: "peertube", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop", embed: "https://joinpeertube.org" },
+        { id: "seed_8", title: "Global Electro & Jazz Music Live Sessions", author: "Dailymotion Sound", platform: "dailymotion", category: "music", time: Date.now(), thumb: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop", embed: "https://www.dailymotion.com" },
+        { id: "seed_9", title: "Freedom & Open Source Software Debate", author: "BitChute Media", platform: "bitchute", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format&fit=crop", embed: "https://www.bitchute.com" },
+        { id: "seed_10", title: "Playeur Creator Exclusive Showcase", author: "Playeur HQ", platform: "playeur", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop", embed: "https://playeur.com" }
     ];
 
     let linksDB = [];
 
-    // Sækjum geymd gögn OG sameinum við sjálfgefnu gögnin svo ekkert vanti
     function loadAndSyncData() {
         try {
-            let saved = localStorage.getItem('corestream_v9_engine');
+            let saved = localStorage.getItem('corestream_v10_final');
             if (saved) {
                 let parsed = JSON.parse(saved);
                 if (Array.isArray(parsed) && parsed.length > 0) {
@@ -355,14 +353,13 @@
             }
         } catch(e) {}
 
-        // Ef einhvern sjálfgefinn tengil vantar, bætum við honum við
         defaultSeedData.forEach(seed => {
             if (!linksDB.some(item => item.id === seed.id)) {
                 linksDB.push(seed);
             }
         });
 
-        localStorage.setItem('corestream_v9_engine', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v10_final', JSON.stringify(linksDB));
     }
 
     loadAndSyncData();
@@ -422,7 +419,6 @@
         `).join('');
     }
 
-    // Hermir eftir því að sækja nýtt efni úr ytri RSS/API veitum
     function fetchNewContent() {
         const platforms = ["youtube", "twitch", "odysee", "rumble", "bitchute", "kick", "peertube", "dailymotion", "vimeo", "playeur"];
         const categories = ["tech", "gaming", "news", "music"];
@@ -430,7 +426,7 @@
         const randomCategory = categories[Math.floor(Math.random() * categories.length)];
         
         const samples = [
-            { title: "New Quantum Computing Breakthough 2026", author: "TechToday", thumb: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&auto=format&fit=crop" },
+            { title: "Quantum Computing Breakthough 2026", author: "TechToday", thumb: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&auto=format&fit=crop" },
             { title: "Live Speedrun Record Broken!", author: "GamerCentral", thumb: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop" },
             { title: "A.I. & Future of Web Development", author: "CodeStream", thumb: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop" },
             { title: "Acoustic Blues & Chill Live Performance", author: "LiveStage", thumb: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop" }
@@ -450,7 +446,7 @@
         };
 
         linksDB.unshift(newVideo);
-        localStorage.setItem('corestream_v9_engine', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v10_final', JSON.stringify(linksDB));
         renderLinks();
     }
 
@@ -487,7 +483,7 @@
         };
 
         linksDB.unshift(newItem);
-        localStorage.setItem('corestream_v9_engine', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v10_final', JSON.stringify(linksDB));
         addModal.classList.remove('active');
         
         document.getElementById('inputTitle').value = '';
@@ -500,7 +496,7 @@
 
     window.deleteLink = function(id) {
         linksDB = linksDB.filter(i => i.id !== id);
-        localStorage.setItem('corestream_v9_engine', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v10_final', JSON.stringify(linksDB));
         renderLinks();
     };
 
