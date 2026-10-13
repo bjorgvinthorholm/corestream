@@ -1,25 +1,21 @@
 <!DOCTYPE html>
 <html lang="is">
 <head>
-    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CoreStream - Global Video Hub</title>
     
-    <!-- PWA Manifest Integration -->
+    <!-- PWA Manifest & Meta Integration -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CoreStream">
     
-    <!-- Meta tags for Global Reach & SEO -->
+    <!-- Meta tags for SEO & Global Reach -->
     <meta name="description" content="CoreStream - Minimalist and high-performance global video aggregation portal featuring content from 10+ major platforms in real-time.">
-    <meta name="keywords" content="corestream, videos, streaming, youtube, twitch, odysee, rumble, kick, dailymotion, vimeo">
-    <meta property="og:title" content="CoreStream - Global Video Hub">
-    <meta property="og:description" content="Discover the latest video content from all major global platforms in a unified, lightning-fast stream.">
-    <meta property="og:type" content="website">
-
+    
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -426,4 +422,595 @@
             align-items: center;
             justify-content: space-between;
             font-size: 12px;
-            color: var(--text
+            color: var(--text-muted);
+            margin-top: auto;
+        }
+
+        .channel-name {
+            color: var(--text-secondary);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 140px;
+        }
+
+        .card-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        .action-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-surface);
+        }
+
+        .action-btn.bookmarked {
+            color: #f59e0b;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(12px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+
+        .modal-header {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 12px;
+        }
+
+        .close-modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .player-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+        }
+
+        .player-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-color);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            padding: 20px;
+            z-index: 300;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+        }
+
+        .bottom-sheet.active {
+            transform: translateY(0);
+        }
+
+        .sheet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .sheet-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .lang-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .lang-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            text-align: left;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .lang-btn.active {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            background: var(--accent-glow);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height);
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 90;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            color: var(--text-muted);
+            font-size: 10px;
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--accent-primary);
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-bottom-nav { display: none; }
+            body { padding-bottom: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <div class="logo-group">
+            <div class="logo-icon">C</div>
+            <div class="logo-text">CoreStream</div>
+        </div>
+
+        <div class="header-actions">
+            <button class="icon-btn" id="themeToggle" title="Breyta þema">🌙</button>
+            <button class="icon-btn" id="langBtn" title="Tungumál">🌐</button>
+        </div>
+    </header>
+
+    <div class="search-container">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" class="search-input" placeholder="Leita í CoreStream..." autocomplete="off">
+            <button class="clear-search" id="clearSearch">✕</button>
+        </div>
+    </div>
+
+    <div class="horizontal-scroller" id="platformChips">
+        <div class="chip active" data-platform="all"><span class="dot"></span><span data-i18n="all">Allar Veitur</span></div>
+        <div class="chip" data-platform="youtube">YouTube</div>
+        <div class="chip" data-platform="twitch">Twitch</div>
+        <div class="chip" data-platform="odysee">Odysee</div>
+        <div class="chip" data-platform="rumble">Rumble</div>
+        <div class="chip" data-platform="bitchute">BitChute</div>
+        <div class="chip" data-platform="kick">Kick</div>
+        <div class="chip" data-platform="peertube">PeerTube</div>
+        <div class="chip" data-platform="dailymotion">Dailymotion</div>
+        <div class="chip" data-platform="vimeo">Vimeo</div>
+        <div class="chip" data-platform="playeur">Playeur</div>
+    </div>
+
+    <div class="horizontal-scroller" id="timeChips" style="background: var(--bg-surface); padding-top: 6px; padding-bottom: 6px;">
+        <div class="chip active" data-time="all" data-i18n="timeAll">Allur Tími</div>
+        <div class="chip" data-time="1h" data-i18n="time1h">⚡ Síðasta klst</div>
+        <div class="chip" data-time="24h" data-i18n="time24h">24 Klukkustundir</div>
+        <div class="chip" data-time="7d" data-i18n="time7d">Síðustu 7 dagar</div>
+    </div>
+
+    <div class="live-bar">
+        <div class="pulse-badge">
+            <div class="pulse-dot"></div>
+            <span id="scanStatus" data-i18n="liveScanner">CoreStream Vaktari Virkur</span>
+        </div>
+        <span id="videoCount">0 myndbönd</span>
+    </div>
+
+    <main>
+        <div class="video-grid" id="videoGrid"></div>
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">📺</div>
+            <p data-i18n="noResults">Engin myndbönd fundust miðað við þessar síur.</p>
+        </div>
+    </main>
+</div>
+
+<nav class="mobile-bottom-nav">
+    <button class="nav-item active" id="navHome">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="navHome">Heim</span>
+    </button>
+    <button class="nav-item" id="navTrending">
+        <span class="nav-icon">🔥</span>
+        <span data-i18n="navTrending">Vinsælt</span>
+    </button>
+    <button class="nav-item" id="navBookmarks">
+        <span class="nav-icon">⭐</span>
+        <span data-i18n="navBookmarks">Vistað</span>
+    </button>
+</nav>
+
+<div class="modal-overlay" id="playerModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <div class="modal-title" id="modalVideoTitle">Myndband</div>
+            <button class="close-modal" id="closeModal">✕</button>
+        </div>
+        <div class="player-wrapper" id="playerWrapper"></div>
+    </div>
+</div>
+
+<div class="bottom-sheet" id="langSheet">
+    <div class="sheet-header">
+        <div class="sheet-title" data-i18n="selectLanguage">Veldu Tungumál</div>
+        <button class="close-modal" id="closeLangSheet">✕</button>
+    </div>
+    <div class="lang-list">
+        <button class="lang-btn active" data-lang="is">🇮🇸 Íslenska</button>
+        <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+        <button class="lang-btn" data-lang="es">🇪🇸 Español</button>
+        <button class="lang-btn" data-lang="de">🇩🇪 Deutsch</button>
+    </div>
+</div>
+
+<script>
+    const translations = {
+        is: {
+            all: "Allar Veitur",
+            timeAll: "Allur Tími",
+            time1h: "⚡ Síðasta klst",
+            time24h: "24 Klukkustundir",
+            time7d: "Síðustu 7 dagar",
+            liveScanner: "CoreStream Vaktari Virkur",
+            noResults: "Engin myndbönd fundust miðað við þessar síur.",
+            selectLanguage: "Veldu Tungumál",
+            navHome: "Heim",
+            navTrending: "Vinsælt",
+            navBookmarks: "Vistað",
+            shareMsg: "Slóð afrituð á klippiborð!",
+            searchPlaceholder: "Leita í CoreStream..."
+        },
+        en: {
+            all: "All Platforms",
+            timeAll: "All Time",
+            time1h: "⚡ Past Hour",
+            time24h: "Past 24 Hours",
+            time7d: "Past 7 Days",
+            liveScanner: "CoreStream Engine Active",
+            noResults: "No videos found for selected filters.",
+            selectLanguage: "Select Language",
+            navHome: "Home",
+            navTrending: "Trending",
+            navBookmarks: "Saved",
+            shareMsg: "Link copied to clipboard!",
+            searchPlaceholder: "Search CoreStream..."
+        },
+        es: {
+            all: "Todas las Plataformas",
+            timeAll: "Todo el tiempo",
+            time1h: "⚡ Última hora",
+            time24h: "Últimas 24 horas",
+            time7d: "Últimos 7 días",
+            liveScanner: "Motor CoreStream Activo",
+            noResults: "No se encontraron vídeos.",
+            selectLanguage: "Seleccionar Idioma",
+            navHome: "Inicio",
+            navTrending: "Tendencias",
+            navBookmarks: "Guardados",
+            shareMsg: "¡Enlace copiado al portapapeles!",
+            searchPlaceholder: "Buscar en CoreStream..."
+        },
+        de: {
+            all: "Alle Plattformen",
+            timeAll: "Alle Zeit",
+            time1h: "⚡ Letzte Stunde",
+            time24h: "Letzte 24 Stunden",
+            time7d: "Letzte 7 Tage",
+            liveScanner: "CoreStream Engine Aktiv",
+            noResults: "Keine Videos gefunden.",
+            selectLanguage: "Sprache Wählen",
+            navHome: "Startseite",
+            navTrending: "Trends",
+            navBookmarks: "Gespeichert",
+            shareMsg: "Link in die Zwischenablage kopiert!",
+            searchPlaceholder: "CoreStream durchsuchen..."
+        }
+    };
+
+    let currentLang = 'is';
+    let currentPlatform = 'all';
+    let currentTimeFilter = 'all';
+    let currentView = 'home';
+    let bookmarks = JSON.parse(localStorage.getItem('corestream_bookmarks') || '[]');
+
+    const sampleVideos = [
+        { id: "yt1", title: "SpaceX Starship Orbital Launch Test", platform: "youtube", author: "SpaceX", time: "10m ago", timestamp: Date.now() - 600000, duration: "12:45", views: "142K", thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ", isTrending: true },
+        { id: "tw1", title: "Championship Esports Final Live Stream", platform: "twitch", author: "ESL_CSGO", time: "25m ago", timestamp: Date.now() - 1500000, duration: "LIVE", views: "85K", thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost", isTrending: true },
+        { id: "od1", title: "Decentralized Tech Protocols Explored", platform: "odysee", author: "TechFreedom", time: "40m ago", timestamp: Date.now() - 2400000, duration: "18:20", views: "12K", thumb: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop", embed: "https://odysee.com/$/embed/example", isTrending: false },
+        { id: "rm1", title: "Independent Journalist Live Panel", platform: "rumble", author: "DailyNews", time: "2h ago", timestamp: Date.now() - 7200000, duration: "45:10", views: "34K", thumb: "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=600&auto=format&fit=crop", embed: "https://rumble.com/embed/v1/", isTrending: true },
+        { id: "bc1", title: "P2P Computing Architecture Talk", platform: "bitchute", author: "NodeDev", time: "5h ago", timestamp: Date.now() - 18000000, duration: "22:05", views: "8K", thumb: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&auto=format&fit=crop", embed: "https://www.bitchute.com/embed/example/", isTrending: false },
+        { id: "kc1", title: "High-Stakes Gaming Tournament Session", platform: "kick", author: "xQc", time: "15m ago", timestamp: Date.now() - 900000, duration: "LIVE", views: "62K", thumb: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop", embed: "https://player.kick.com/xqc", isTrending: true },
+        { id: "pt1", title: "Open Source Fediverse Documentary", platform: "peertube", author: "Framasoft", time: "1d ago", timestamp: Date.now() - 86400000, duration: "31:40", views: "19K", thumb: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop", embed: "https://peertube.tv/videos/embed/example", isTrending: false },
+        { id: "dm1", title: "European Cultural & Music Showcase", platform: "dailymotion", author: "EuroArts", time: "3d ago", timestamp: Date.now() - 259200000, duration: "08:15", views: "41K", thumb: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop", embed: "https://www.dailymotion.com/embed/video/x7zn25", isTrending: false },
+        { id: "vm1", title: "Minimalist Architectural Design Feature", platform: "vimeo", author: "DesignStudio", time: "4d ago", timestamp: Date.now() - 345600000, duration: "05:50", views: "95K", thumb: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&auto=format&fit=crop", embed: "https://player.vimeo.com/video/76979871", isTrending: true },
+        { id: "pl1", title: "Creator Freedom & Video Monetization", platform: "playeur", author: "CreatorHub", time: "6d ago", timestamp: Date.now() - 518400000, duration: "14:10", views: "15K", thumb: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&auto=format&fit=crop", embed: "https://playeur.com/embed/example", isTrending: false }
+    ];
+
+    const videoGrid = document.getElementById('videoGrid');
+    const emptyState = document.getElementById('emptyState');
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    const playerModal = document.getElementById('playerModal');
+    const playerWrapper = document.getElementById('playerWrapper');
+    const modalVideoTitle = document.getElementById('modalVideoTitle');
+    const closeModal = document.getElementById('closeModal');
+    const langSheet = document.getElementById('langSheet');
+
+    function renderVideos() {
+        const query = searchInput.value.toLowerCase().trim();
+        const now = Date.now();
+
+        const filtered = sampleVideos.filter(vid => {
+            if (currentView === 'trending' && !vid.isTrending) return false;
+            if (currentView === 'bookmarks' && !bookmarks.includes(vid.id)) return false;
+            if (currentPlatform !== 'all' && vid.platform !== currentPlatform) return false;
+            if (currentTimeFilter === '1h' && (now - vid.timestamp > 3600000)) return false;
+            if (currentTimeFilter === '24h' && (now - vid.timestamp > 86400000)) return false;
+            if (currentTimeFilter === '7d' && (now - vid.timestamp > 604800000)) return false;
+            if (query && !vid.title.toLowerCase().includes(query) && !vid.author.toLowerCase().includes(query)) return false;
+            return true;
+        });
+
+        document.getElementById('videoCount').textContent = `${filtered.length} myndbönd`;
+
+        if (filtered.length === 0) {
+            videoGrid.innerHTML = '';
+            emptyState.style.display = 'block';
+            return;
+        }
+
+        emptyState.style.display = 'none';
+        videoGrid.innerHTML = filtered.map(vid => {
+            const isBookmarked = bookmarks.includes(vid.id);
+            return `
+                <div class="video-card">
+                    <div class="thumbnail-box" onclick="openPlayer('${vid.id}')">
+                        <img src="${vid.thumb}" alt="${vid.title}" loading="lazy">
+                        <span class="card-badge">${vid.platform}</span>
+                        <span class="duration-tag">${vid.duration}</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title" onclick="openPlayer('${vid.id}')">${vid.title}</div>
+                        <div class="card-meta">
+                            <span class="channel-name">${vid.author}</span>
+                            <div class="card-actions">
+                                <button class="action-btn ${isBookmarked ? 'bookmarked' : ''}" onclick="toggleBookmark('${vid.id}')" title="Vista">
+                                    ${isBookmarked ? '★' : '☆'}
+                                </button>
+                                <button class="action-btn" onclick="shareVideo('${vid.title}')" title="Deila">
+                                    🔗
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    window.openPlayer = function(id) {
+        const vid = sampleVideos.find(v => v.id === id);
+        if (!vid) return;
+        modalVideoTitle.textContent = vid.title;
+        playerWrapper.innerHTML = `<iframe src="${vid.embed}" allowfullscreen allow="autoplay"></iframe>`;
+        playerModal.classList.add('active');
+    };
+
+    closeModal.addEventListener('click', () => {
+        playerModal.classList.remove('active');
+        playerWrapper.innerHTML = '';
+    });
+
+    window.toggleBookmark = function(id) {
+        if (bookmarks.includes(id)) {
+            bookmarks = bookmarks.filter(b => b !== id);
+        } else {
+            bookmarks.push(id);
+        }
+        localStorage.setItem('corestream_bookmarks', JSON.stringify(bookmarks));
+        renderVideos();
+    };
+
+    window.shareVideo = function(title) {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(window.location.href);
+            alert(translations[currentLang].shareMsg);
+        }
+    };
+
+    document.getElementById('platformChips').addEventListener('click', (e) => {
+        const chip = e.target.closest('.chip');
+        if (!chip) return;
+        document.querySelectorAll('#platformChips .chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentPlatform = chip.dataset.platform;
+        renderVideos();
+    });
+
+    document.getElementById('timeChips').addEventListener('click', (e) => {
+        const chip = e.target.closest('.chip');
+        if (!chip) return;
+        document.querySelectorAll('#timeChips .chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentTimeFilter = chip.dataset.time;
+        renderVideos();
+    });
+
+    searchInput.addEventListener('input', () => {
+        clearSearch.style.display = searchInput.value ? 'block' : 'none';
+        renderVideos();
+    });
+
+    clearSearch.addEventListener('click', () => {
+        searchInput.value = '';
+        clearSearch.style.display = 'none';
+        renderVideos();
+    });
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+    });
+
+    document.getElementById('langBtn').addEventListener('click', () => {
+        langSheet.classList.add('active');
+    });
+
+    document.getElementById('closeLangSheet').addEventListener('click', () => {
+        langSheet.classList.remove('active');
+    });
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentLang = btn.dataset.lang;
+            applyTranslations();
+            langSheet.classList.remove('active');
+            renderVideos();
+        });
+    });
+
+    function applyTranslations() {
+        const dict = translations[currentLang];
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.dataset.i18n;
+            if (dict[key]) {
+                el.textContent = dict[key];
+            }
+        });
+        searchInput.placeholder = dict.searchPlaceholder;
+    }
+
+    const navHome = document.getElementById('navHome');
+    const navTrending = document.getElementById('navTrending');
+    const navBookmarks = document.getElementById('navBookmarks');
+
+    function setActiveNav(navBtn, view) {
+        [navHome, navTrending, navBookmarks].forEach(b => b.classList.remove('active'));
+        navBtn.classList.add('active');
+        currentView = view;
+        renderVideos();
+    }
+
+    navHome.addEventListener('click', () => setActiveNav(navHome, 'home'));
+    navTrending.addEventListener('click', () => setActiveNav(navTrending, 'trending'));
+    navBookmarks.addEventListener('click', () => setActiveNav(navBookmarks, 'bookmarks'));
+
+    renderVideos();
+</script>
+</body>
+</html>
