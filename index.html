@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CoreStream - Global Video Hub</title>
     
-    <!-- PWA Manifest & Meta Integration -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
     <meta name="mobile-web-app-capable" content="yes">
@@ -13,7 +12,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CoreStream">
     
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -34,14 +32,12 @@
             --accent-primary: #6366f1;
             --accent-hover: #4f46e5;
             --accent-glow: rgba(99, 102, 241, 0.25);
-            
             --badge-new: #10b981;
             
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 18px;
             --radius-full: 9999px;
-            
             --header-height: 56px;
         }
 
@@ -52,31 +48,23 @@
             --bg-glass: rgba(255, 255, 255, 0.92);
             --border-color: rgba(0, 0, 0, 0.08);
             --border-highlight: rgba(0, 0, 0, 0.15);
-            
             --text-primary: #0f172a;
             --text-secondary: #475569;
             --text-muted: #94a3b8;
-            
             --accent-primary: #4f46e5;
             --accent-hover: #4338ca;
             --accent-glow: rgba(79, 70, 229, 0.15);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.5;
             overflow-x: hidden;
             font-size: 14px;
-            -webkit-font-smoothing: antialiased;
         }
 
         .app-container {
@@ -95,7 +83,6 @@
             z-index: 100;
             background: var(--bg-glass);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border-color);
             height: var(--header-height);
             display: flex;
@@ -104,48 +91,24 @@
             padding: 0 8px;
         }
 
-        .logo-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
+        .logo-group { display: flex; align-items: center; gap: 10px; }
         .logo-icon {
-            width: 28px;
-            height: 28px;
+            width: 28px; height: 28px;
             background: linear-gradient(135deg, var(--accent-primary), #a855f7);
             border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 700;
-            font-size: 15px;
-            box-shadow: 0 0 10px var(--accent-glow);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 700; font-size: 15px;
         }
-
-        .logo-text {
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            background: linear-gradient(90deg, var(--text-primary), var(--text-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .logo-text { font-size: 16px; font-weight: 700; color: var(--text-primary); }
 
         .icon-btn {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            width: 34px;
-            height: 34px;
+            width: 34px; height: 34px;
             border-radius: var(--radius-full);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 15px;
         }
 
         .search-container {
@@ -158,25 +121,10 @@
             align-items: center;
         }
 
-        .search-box {
-            position: relative;
-            display: flex;
-            align-items: center;
-            flex: 1;
-            min-width: 180px;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 14px;
-            color: var(--text-muted);
-            pointer-events: none;
-            font-size: 14px;
-        }
-
+        .search-box { position: relative; display: flex; align-items: center; flex: 1; min-width: 180px; }
+        .search-icon { position: absolute; left: 14px; color: var(--text-muted); font-size: 14px; }
         .search-input {
-            width: 100%;
-            height: 38px;
+            width: 100%; height: 38px;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-full);
@@ -184,12 +132,6 @@
             color: var(--text-primary);
             font-size: 13px;
             outline: none;
-            transition: all 0.2s ease;
-        }
-
-        .search-input:focus {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
         .filter-select {
@@ -203,76 +145,30 @@
             font-weight: 500;
             outline: none;
             cursor: pointer;
-            transition: border-color 0.2s ease;
-        }
-
-        .filter-select:focus {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
         .add-btn {
             background: var(--accent-primary);
-            border: none;
-            color: #fff;
-            padding: 0 16px;
-            height: 38px;
+            border: none; color: #fff;
+            padding: 0 16px; height: 38px;
             border-radius: var(--radius-full);
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 13px; font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .add-btn:hover {
-            background: var(--accent-hover);
         }
 
         .live-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 6px 10px;
-            font-size: 11px;
-            color: var(--text-muted);
-            background: var(--bg-surface);
-            border-bottom: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 6px 10px; font-size: 11px; color: var(--text-muted);
+            background: var(--bg-surface); border-bottom: 1px solid var(--border-color);
         }
 
-        .pulse-badge {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: var(--badge-new);
-            font-weight: 600;
-        }
-
-        .pulse-dot {
-            width: 7px;
-            height: 7px;
-            background: var(--badge-new);
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-
-        main {
-            flex: 1;
-            padding: 12px 4px;
-        }
+        main { flex: 1; padding: 12px 4px; }
 
         .video-grid {
             display: grid;
             grid-template-columns: repeat(1, 1fr);
             gap: 12px;
         }
-
         @media (min-width: 500px) { .video-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 850px) { .video-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 1150px) { .video-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -284,115 +180,41 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            display: flex; flex-direction: column;
             position: relative;
-        }
-
-        .video-card:hover {
-            border-color: var(--border-highlight);
-            transform: translateY(-2px);
         }
 
         .thumbnail-box {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: var(--bg-surface);
-            overflow: hidden;
-            cursor: pointer;
+            position: relative; width: 100%; aspect-ratio: 16/9;
+            background: var(--bg-surface); overflow: hidden; cursor: pointer;
         }
-
-        .thumbnail-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .video-card:hover .thumbnail-box img {
-            transform: scale(1.03);
-        }
+        .thumbnail-box img { width: 100%; height: 100%; object-fit: cover; }
 
         .card-badge {
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(6px);
-            color: #fff;
-            padding: 2px 6px;
-            border-radius: var(--radius-sm);
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
+            position: absolute; top: 6px; left: 6px;
+            background: rgba(0,0,0,0.75); color: #fff;
+            padding: 2px 6px; border-radius: var(--radius-sm);
+            font-size: 10px; font-weight: 600; text-transform: uppercase;
         }
 
-        .card-content {
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex: 1;
-        }
-
-        .card-title {
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 1.35;
-            color: var(--text-primary);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .card-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: auto;
-        }
-
-        .channel-name {
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .delete-btn {
-            background: none;
-            border: none;
-            color: #ef4444;
-            cursor: pointer;
-            font-size: 13px;
-            padding: 2px 4px;
-        }
+        .card-content { padding: 10px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .card-title { font-size: 13px; font-weight: 600; color: var(--text-primary); cursor: pointer; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: auto; }
+        .channel-name { color: var(--text-secondary); font-weight: 500; }
+        .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 13px; }
 
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            z-index: 200;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.8); z-index: 200;
             display: flex; align-items: center; justify-content: center;
-            padding: 12px;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.2s ease;
+            padding: 12px; opacity: 0; pointer-events: none; transition: opacity 0.2s;
         }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
         .modal-form {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            width: 100%; max-width: 450px;
+            background: var(--bg-surface); border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg); padding: 20px; width: 100%; max-width: 450px;
             display: flex; flex-direction: column; gap: 12px;
         }
-        .modal-form h3 { font-size: 16px; margin-bottom: 4px; }
         .modal-form input, .modal-form select {
             width: 100%; padding: 10px; background: var(--bg-primary);
             border: 1px solid var(--border-color); border-radius: var(--radius-sm);
@@ -411,9 +233,7 @@
             <div class="logo-icon">C</div>
             <div class="logo-text">CoreStream</div>
         </div>
-        <div class="header-actions">
-            <button class="icon-btn" id="themeToggle" title="Breyta þema">🌙</button>
-        </div>
+        <button class="icon-btn" id="themeToggle" title="Breyta þema">🌙</button>
     </header>
 
     <div class="search-container">
@@ -428,12 +248,7 @@
             <option value="twitch">Twitch</option>
             <option value="odysee">Odysee</option>
             <option value="rumble">Rumble</option>
-            <option value="bitchute">BitChute</option>
-            <option value="kick">Kick</option>
-            <option value="peertube">PeerTube</option>
-            <option value="dailymotion">Dailymotion</option>
             <option value="vimeo">Vimeo</option>
-            <option value="playeur">Playeur</option>
         </select>
 
         <select id="categorySelect" class="filter-select">
@@ -455,10 +270,7 @@
     </div>
 
     <div class="live-bar">
-        <div class="pulse-badge">
-            <div class="pulse-dot"></div>
-            <span>CoreStream Vaktari Virkur (24/7 Safnari)</span>
-        </div>
+        <span>CoreStream Vaktari Virkur</span>
         <span id="videoCount">0 tenglar</span>
     </div>
 
@@ -470,21 +282,16 @@
 <div class="modal-overlay" id="addModal">
     <div class="modal-form">
         <h3>Bæta við nýjum tengli</h3>
-        <input type="text" id="inputTitle" placeholder="Titill myndbands / útsendingar">
+        <input type="text" id="inputTitle" placeholder="Titill myndbands">
         <input type="text" id="inputAuthor" placeholder="Höfundur / Rás">
         <input type="text" id="inputThumb" placeholder="Slóð á smámynd (Image URL)">
         <input type="text" id="inputEmbed" placeholder="Slóð á myndband / Embed slóð">
-        <select id="inputPlatform" style="margin-bottom: 4px;">
+        <select id="inputPlatform">
             <option value="youtube">YouTube</option>
             <option value="twitch">Twitch</option>
             <option value="odysee">Odysee</option>
             <option value="rumble">Rumble</option>
-            <option value="bitchute">BitChute</option>
-            <option value="kick">Kick</option>
-            <option value="peertube">PeerTube</option>
-            <option value="dailymotion">Dailymotion</option>
             <option value="vimeo">Vimeo</option>
-            <option value="playeur">Playeur</option>
         </select>
         <select id="inputCategory">
             <option value="tech">Tækni & Vísindi</option>
@@ -494,53 +301,29 @@
         </select>
         <div class="modal-actions">
             <button class="btn-cancel" id="closeAddModal">Hætta við</button>
-            <button class="btn-submit" id="saveVideoBtn">Vista tengil</button>
+            <button class="btn-submit" id="saveVideoBtn">Vista</button>
         </div>
     </div>
 </div>
 
 <script>
-    let currentPlatform = 'all';
-    let currentCategory = 'all';
-    let currentTimeFilter = 'all';
-
-    // Fastar sýnishornastærðir sem munu ALLTAF virka óháð tíma
-    const initialSampleData = [
-        { 
-            id: "1", 
-            title: "SpaceX Starship Orbital Launch", 
-            author: "SpaceX", 
-            platform: "youtube", 
-            category: "tech", 
-            timestamp: Date.now(), 
-            thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", 
-            embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" 
-        },
-        { 
-            id: "2", 
-            title: "Esports Championship Live", 
-            author: "ESL", 
-            platform: "twitch", 
-            category: "gaming", 
-            timestamp: Date.now(), 
-            thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", 
-            embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" 
-        }
+    // Grunn gögn sem munu alltaf birtast
+    let linksDB = [
+        { id: "1", title: "SpaceX Starship Orbital Launch", author: "SpaceX", platform: "youtube", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+        { id: "2", title: "Esports Championship Live", author: "ESL", platform: "twitch", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" }
     ];
 
-    let linksDB = [];
-    
-    // Sækjum gögn úr LocalStorage eða stofnum nýtt ef ekkert finnst
+    // Reynum að sækja vistuð gögn, en hreinsum ef eitthvað brotnar
     try {
-        let stored = localStorage.getItem('corestream_v3_data');
-        if (stored) {
-            linksDB = JSON.parse(stored);
-        } else {
-            linksDB = initialSampleData;
-            localStorage.setItem('corestream_v3_data', JSON.stringify(linksDB));
+        let saved = localStorage.getItem('corestream_pure_data');
+        if (saved) {
+            let parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                linksDB = parsed;
+            }
         }
     } catch(e) {
-        linksDB = initialSampleData;
+        console.log("Notum sjálfgefna lista");
     }
 
     const videoGrid = document.getElementById('videoGrid');
@@ -552,33 +335,33 @@
 
     function renderLinks() {
         const query = searchInput.value.toLowerCase().trim();
+        const selPlatform = platformSelect.value;
+        const selCategory = categorySelect.value;
+        const selTime = timeSelect.value;
         const now = Date.now();
 
         const filtered = linksDB.filter(item => {
-            // 1. Veitusía
-            if (currentPlatform !== 'all' && item.platform !== currentPlatform) return false;
-            
-            // 2. Flokkasía (Sýnum ef enginn flokkur er á kortinu eða ef hann passar)
-            if (currentCategory !== 'all' && item.category && item.category !== currentCategory) return false;
-            
-            // 3. Tímasía (EKKI strengjað ef 'all' er valið)
-            if (currentTimeFilter !== 'all' && item.timestamp) {
-                const age = now - item.timestamp;
-                if (currentTimeFilter === '1h' && age > 3600000) return false;
-                if (currentTimeFilter === '24h' && age > 86400000) return false;
-                if (currentTimeFilter === '7d' && age > 604800000) return false;
+            // Veitusía
+            if (selPlatform !== 'all' && item.platform !== selPlatform) return false;
+            // Flokkasía (ef item er með flokk, athugum hvort hann passar)
+            if (selCategory !== 'all' && item.category && item.category !== selCategory) return false;
+            // Tímasía
+            if (selTime !== 'all' && item.time) {
+                const diff = now - item.time;
+                if (selTime === '1h' && diff > 3600000) return false;
+                if (selTime === '24h' && diff > 86400000) return false;
+                if (selTime === '7d' && diff > 604800000) return false;
             }
-            
-            // 4. Leit
+            // Leitarorð
             if (query && !item.title.toLowerCase().includes(query) && !item.author.toLowerCase().includes(query)) return false;
-            
+
             return true;
         });
 
         document.getElementById('videoCount').textContent = `${filtered.length} tenglar`;
 
         if (filtered.length === 0) {
-            videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">Engir tenglar fundust miðað við þessar síur.</div>';
+            videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">Engir tenglar fundust með þessum síum. Veldu "Allir Flokkar" eða "Allar Veitur".</div>';
             return;
         }
 
@@ -586,13 +369,13 @@
             <div class="video-card">
                 <div class="thumbnail-box" onclick="window.open('${item.embed}', '_blank')">
                     <img src="${item.thumb}" alt="${item.title}" loading="lazy">
-                    <span class="card-badge">${item.platform || 'veita'}</span>
+                    <span class="card-badge">${item.platform}</span>
                 </div>
                 <div class="card-content">
                     <div class="card-title" onclick="window.open('${item.embed}', '_blank')">${item.title}</div>
                     <div class="card-meta">
-                        <span class="channel-name">${item.author || 'Höfundur'}</span>
-                        <button class="delete-btn" onclick="deleteLink('${item.id}')" title="Eyða">Eyða</button>
+                        <span class="channel-name">${item.author}</span>
+                        <button class="delete-btn" onclick="deleteLink('${item.id}')">Eyða</button>
                     </div>
                 </div>
             </div>
@@ -621,13 +404,13 @@
             author: author || 'Óþekkt',
             platform,
             category,
-            timestamp: Date.now(),
+            time: Date.now(),
             thumb,
             embed
         };
 
         linksDB.unshift(newItem);
-        localStorage.setItem('corestream_v3_data', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_pure_data', JSON.stringify(linksDB));
         addModal.classList.remove('active');
         
         document.getElementById('inputTitle').value = '';
@@ -640,25 +423,13 @@
 
     window.deleteLink = function(id) {
         linksDB = linksDB.filter(i => i.id !== id);
-        localStorage.setItem('corestream_v3_data', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_pure_data', JSON.stringify(linksDB));
         renderLinks();
     };
 
-    platformSelect.addEventListener('change', (e) => {
-        currentPlatform = e.target.value;
-        renderLinks();
-    });
-
-    categorySelect.addEventListener('change', (e) => {
-        currentCategory = e.target.value;
-        renderLinks();
-    });
-
-    timeSelect.addEventListener('change', (e) => {
-        currentTimeFilter = e.target.value;
-        renderLinks();
-    });
-
+    platformSelect.addEventListener('change', renderLinks);
+    categorySelect.addEventListener('change', renderLinks);
+    timeSelect.addEventListener('change', renderLinks);
     searchInput.addEventListener('input', renderLinks);
 
     document.getElementById('themeToggle').addEventListener('click', () => {
