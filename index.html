@@ -307,14 +307,17 @@
 </div>
 
 <script>
+    // Sýnishorn fyrir ALLRA flokka til að síurnar virki alltaf fallega
     const defaultLinks = [
         { id: "1", title: "SpaceX Starship Orbital Launch", author: "SpaceX", platform: "youtube", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-        { id: "2", title: "Esports Championship Live", author: "ESL", platform: "twitch", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" }
+        { id: "2", title: "Esports Championship Live", author: "ESL", platform: "twitch", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" },
+        { id: "3", title: "Global Breaking News Stream", author: "NewsNet", platform: "odysee", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&auto=format&fit=crop", embed: "https://odysee.com/$/embed/@news:f" },
+        { id: "4", title: "Ambient Jazz & Blues Session", author: "ChillCafe", platform: "vimeo", category: "music", time: Date.now(), thumb: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop", embed: "https://player.vimeo.com/video/76979871" }
     ];
 
     let linksDB = defaultLinks;
     try {
-        let saved = localStorage.getItem('corestream_stable_data');
+        let saved = localStorage.getItem('corestream_final_v4');
         if (saved) {
             let parsed = JSON.parse(saved);
             if (Array.isArray(parsed) && parsed.length > 0) {
@@ -340,7 +343,6 @@
         const now = Date.now();
 
         const filtered = linksDB.filter(item => {
-            // Örugg síun sem tryggir að engu sé hent út að ástæðulausu
             const matchPlatform = (selPlatform === 'all' || item.platform === selPlatform);
             const matchCategory = (selCategory === 'all' || item.category === selCategory || !item.category);
             
@@ -360,7 +362,7 @@
         document.getElementById('videoCount').textContent = `${filtered.length} tenglar`;
 
         if (filtered.length === 0) {
-            videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">Engir tenglar fundust með þessum síum. Reyndu að velja "Allir Flokkar" eða "Allar Veitur".</div>';
+            videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">Engir tenglar fundust í þessum flokki eða með þessum síum.</div>';
             return;
         }
 
@@ -409,7 +411,7 @@
         };
 
         linksDB.unshift(newItem);
-        localStorage.setItem('corestream_stable_data', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_final_v4', JSON.stringify(linksDB));
         addModal.classList.remove('active');
         
         document.getElementById('inputTitle').value = '';
@@ -422,7 +424,7 @@
 
     window.deleteLink = function(id) {
         linksDB = linksDB.filter(i => i.id !== id);
-        localStorage.setItem('corestream_stable_data', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_final_v4', JSON.stringify(linksDB));
         renderLinks();
     };
 
