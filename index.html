@@ -307,7 +307,7 @@
 </div>
 
 <script>
-    // Sýnishorn fyrir ALLRA flokka til að síurnar virki alltaf fallega
+    // Sjálfgefin sýnishorn fyrir alla flokka
     const defaultLinks = [
         { id: "1", title: "SpaceX Starship Orbital Launch", author: "SpaceX", platform: "youtube", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
         { id: "2", title: "Esports Championship Live", author: "ESL", platform: "twitch", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" },
@@ -317,12 +317,14 @@
 
     let linksDB = defaultLinks;
     try {
-        let saved = localStorage.getItem('corestream_final_v4');
+        let saved = localStorage.getItem('corestream_v5_fresh');
         if (saved) {
             let parsed = JSON.parse(saved);
             if (Array.isArray(parsed) && parsed.length > 0) {
                 linksDB = parsed;
             }
+        } else {
+            localStorage.setItem('corestream_v5_fresh', JSON.stringify(defaultLinks));
         }
     } catch(e) {
         linksDB = defaultLinks;
@@ -344,7 +346,7 @@
 
         const filtered = linksDB.filter(item => {
             const matchPlatform = (selPlatform === 'all' || item.platform === selPlatform);
-            const matchCategory = (selCategory === 'all' || item.category === selCategory || !item.category);
+            const matchCategory = (selCategory === 'all' || item.category === selCategory);
             
             let matchTime = true;
             if (selTime !== 'all' && item.time) {
@@ -354,7 +356,7 @@
                 if (selTime === '7d' && diff > 604800000) matchTime = false;
             }
 
-            const matchQuery = (!query || item.title.toLowerCase().includes(query) || item.author.toLowerCase().includes(query));
+            const matchQuery = (!query || (item.title && item.title.toLowerCase().includes(query)) || (item.author && item.author.toLowerCase().includes(query)));
 
             return matchPlatform && matchCategory && matchTime && matchQuery;
         });
@@ -362,7 +364,7 @@
         document.getElementById('videoCount').textContent = `${filtered.length} tenglar`;
 
         if (filtered.length === 0) {
-            videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">Engir tenglar fundust í þessum flokki eða með þessum síum.</div>';
+            videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px;">Engir tenglar fundust í þessari síu.</div>';
             return;
         }
 
@@ -411,7 +413,7 @@
         };
 
         linksDB.unshift(newItem);
-        localStorage.setItem('corestream_final_v4', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v5_fresh', JSON.stringify(linksDB));
         addModal.classList.remove('active');
         
         document.getElementById('inputTitle').value = '';
@@ -424,7 +426,7 @@
 
     window.deleteLink = function(id) {
         linksDB = linksDB.filter(i => i.id !== id);
-        localStorage.setItem('corestream_final_v4', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v5_fresh', JSON.stringify(linksDB));
         renderLinks();
     };
 
