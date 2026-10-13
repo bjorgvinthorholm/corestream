@@ -280,7 +280,7 @@
             <option value="7d">Síðustu 7 dagar</option>
         </select>
 
-        <button class="fetch-btn" id="triggerFetchBtn">🔄 Sækja 100 Ný Efni</button>
+        <button class="fetch-btn" id="triggerFetchBtn">🔄 Sækja 1000 Ný Efni</button>
         <button class="add-btn" id="openAddModal">+ Bæta við</button>
     </div>
 
@@ -344,7 +344,7 @@
 
     function loadAndSyncData() {
         try {
-            let saved = localStorage.getItem('corestream_v11_bulk');
+            let saved = localStorage.getItem('corestream_v12_mega');
             if (saved) {
                 let parsed = JSON.parse(saved);
                 if (Array.isArray(parsed) && parsed.length > 0) {
@@ -354,12 +354,12 @@
         } catch(e) {}
 
         defaultSeedData.forEach(seed => {
-            if (!linksDB.some(item => item.id === seed.id)) {
+            if (!linksDB.some(item => item.id === seed.id || item.title === seed.title)) {
                 linksDB.push(seed);
             }
         });
 
-        localStorage.setItem('corestream_v11_bulk', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v12_mega', JSON.stringify(linksDB));
     }
 
     loadAndSyncData();
@@ -369,134 +369,3 @@
     const platformSelect = document.getElementById('platformSelect');
     const categorySelect = document.getElementById('categorySelect');
     const timeSelect = document.getElementById('timeSelect');
-    const addModal = document.getElementById('addModal');
-
-    function renderLinks() {
-        const query = searchInput.value.toLowerCase().trim();
-        const selPlatform = platformSelect.value;
-        const selCategory = categorySelect.value;
-        const selTime = timeSelect.value;
-        const now = Date.now();
-
-        const filtered = linksDB.filter(item => {
-            const matchPlatform = (selPlatform === 'all' || item.platform === selPlatform);
-            const matchCategory = (selCategory === 'all' || item.category === selCategory);
-            
-            let matchTime = true;
-            if (selTime !== 'all' && item.time) {
-                const diff = now - item.time;
-                if (selTime === '1h' && diff > 3600000) matchTime = false;
-                if (selTime === '24h' && diff > 86400000) matchTime = false;
-                if (selTime === '7d' && diff > 604800000) matchTime = false;
-            }
-
-            const matchQuery = (!query || (item.title && item.title.toLowerCase().includes(query)) || (item.author && item.author.toLowerCase().includes(query)));
-
-            return matchPlatform && matchCategory && matchTime && matchQuery;
-        });
-
-        document.getElementById('videoCount').textContent = `${filtered.length} tenglar birtir (${linksDB.length} alls í safni)`;
-
-        if (filtered.length === 0) {
-            videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px;">Engir tenglar fundust í þessari síu. Prófaðu "Allar Veitur" eða "Allir Flokkar".</div>';
-            return;
-        }
-
-        videoGrid.innerHTML = filtered.map(item => `
-            <div class="video-card">
-                <div class="thumbnail-box" onclick="window.open('${item.embed}', '_blank')">
-                    <img src="${item.thumb}" alt="${item.title}" loading="lazy">
-                    <span class="card-badge">${item.platform || 'veita'}</span>
-                </div>
-                <div class="card-content">
-                    <div class="card-title" onclick="window.open('${item.embed}', '_blank')">${item.title}</div>
-                    <div class="card-meta">
-                        <span class="channel-name">${item.author || 'Höfundur'}</span>
-                        <button class="delete-btn" onclick="deleteLink('${item.id}')">Eyða</button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // Fall sem býr til 100 nýja tengla í einu og dreifir þeim yfir allar veitur
-    function fetch100NewItems() {
-        const platforms = ["youtube", "twitch", "odysee", "rumble", "bitchute", "kick", "peertube", "dailymotion", "vimeo", "playeur"];
-        const categories = ["tech", "gaming", "news", "music"];
-        
-        const topicPool = [
-            { t: "Quantum AI Breakthrough 2026", a: "TechPulse", thumb: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&auto=format&fit=crop" },
-            { t: "Pro Cyberpunk Gaming Highlights", a: "GamerHQ", thumb: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop" },
-            { t: "Global Geopolitics & Tech Future", a: "WorldNews", thumb: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop" },
-            { t: "Midnight Jazz & Blues Acoustic Live", a: "SoundVibe", thumb: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop" },
-            { t: "Next-Gen Engine 3D Graphics Test", a: "DevCentral", thumb: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop" },
-            { t: "Deep Space Exploration & Starship", a: "AstroNet", thumb: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop" }
-        ];
-
-        let newBatch = [];
-        const baseTime = Date.now();
-
-        for (let i = 0; i < 100; i++) {
-            const platform = platforms[i % platforms.length];
-            const category = categories[i % categories.length];
-            const topic = topicPool[Math.floor(Math.random() * topicPool.length)];
-
-            newBatch.push({
-                id: `bulk_${baseTime}_${i}`,
-                title: `${topic.t} #${i + 1}`,
-                author: `${topic.a} ${platform.toUpperCase()}`,
-                platform: platform,
-                category: category,
-                time: baseTime - (i * 60000), // dreifist yfir síðustu klukkustundir
-                thumb: topic.thumb,
-                embed: "https://youtube.com"
-            });
-        }
-
-        linksDB = [...newBatch, ...linksDB];
-        localStorage.setItem('corestream_v11_bulk', JSON.stringify(linksDB));
-        renderLinks();
-    }
-
-    document.getElementById('triggerFetchBtn').addEventListener('click', () => {
-        fetch100NewItems();
-        alert("100 nýjum tenglum hefur verið bætt við safnið!");
-    });
-
-    document.getElementById('openAddModal').addEventListener('click', () => addModal.classList.add('active'));
-    document.getElementById('closeAddModal').addEventListener('click', () => addModal.classList.remove('active'));
-
-    document.getElementById('saveVideoBtn').addEventListener('click', () => {
-        const title = document.getElementById('inputTitle').value.trim();
-        const author = document.getElementById('inputAuthor').value.trim();
-        const thumb = document.getElementById('inputThumb').value.trim();
-        const embed = document.getElementById('inputEmbed').value.trim();
-        const platform = document.getElementById('inputPlatform').value;
-        const category = document.getElementById('inputCategory').value;
-
-        if (!title || !thumb || !embed) {
-            alert("Vinsamlegast fylltu út titil, smámynd og slóð.");
-            return;
-        }
-
-        const newItem = {
-            id: Date.now().toString(),
-            title,
-            author: author || 'Óþekkt',
-            platform,
-            category,
-            time: Date.now(),
-            thumb,
-            embed
-        };
-
-        linksDB.unshift(newItem);
-        localStorage.setItem('corestream_v11_bulk', JSON.stringify(linksDB));
-        addModal.classList.remove('active');
-        
-        document.getElementById('inputTitle').value = '';
-        document.getElementById('inputAuthor').value = '';
-        document.getElementById('inputThumb').value = '';
-        document.getElementById('inputEmbed').value = '';
-
-        renderLinks();
