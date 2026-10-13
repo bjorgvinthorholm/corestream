@@ -9,7 +9,604 @@
     <meta name="theme-color" content="#6366f1">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><!DOCTYPE html>
+<html lang="is">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CoreStream - Global Video Hub</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CoreStream">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-primary: #0a0a0c;
+            --bg-surface: #121216;
+            --bg-card: #18181f;
+            --bg-glass: rgba(24, 24, 31, 0.90);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(255, 255, 255, 0.18);
+            
+            --text-primary: #f3f3f6;
+            --text-secondary: #9a9ab0;
+            --text-muted: #64647a;
+            
+            --accent-primary: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-glow: rgba(99, 102, 241, 0.25);
+            --badge-new: #10b981;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-full: 9999px;
+            --header-height: 56px;
+        }
+
+        body.light-theme {
+            --bg-primary: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-card: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.92);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --border-highlight: rgba(0, 0, 0, 0.15);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --accent-primary: #4f46e5;
+            --accent-hover: #4338ca;
+            --accent-glow: rgba(79, 70, 229, 0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+            font-size: 14px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1920px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 0 12px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+        }
+
+        .logo-group { display: flex; align-items: center; gap: 10px; }
+        .logo-icon {
+            width: 28px; height: 28px;
+            background: linear-gradient(135deg, var(--accent-primary), #a855f7);
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 700; font-size: 15px;
+        }
+        .logo-text { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+
+        .icon-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 34px; height: 34px;
+            border-radius: var(--radius-full);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+        }
+
+        .search-container {
+            padding: 10px 8px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box { position: relative; display: flex; align-items: center; flex: 1; min-width: 180px; }
+        .search-icon { position: absolute; left: 14px; color: var(--text-muted); font-size: 14px; }
+        .search-input {
+            width: 100%; height: 38px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            padding: 0 38px 0 38px;
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .filter-select {
+            height: 38px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            color: var(--text-primary);
+            padding: 0 16px;
+            font-size: 13px;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background: var(--accent-primary);
+            border: none; color: #fff;
+            padding: 0 16px; height: 38px;
+            border-radius: var(--radius-full);
+            font-size: 13px; font-weight: 600;
+            cursor: pointer;
+        }
+
+        .fetch-btn {
+            background: #10b981;
+            border: none; color: #fff;
+            padding: 0 14px; height: 38px;
+            border-radius: var(--radius-full);
+            font-size: 13px; font-weight: 600;
+            cursor: pointer;
+        }
+
+        .live-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 6px 10px; font-size: 11px; color: var(--text-muted);
+            background: var(--bg-surface); border-bottom: 1px solid var(--border-color);
+        }
+
+        main { flex: 1; padding: 12px 4px; }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 12px;
+        }
+        @media (min-width: 500px) { .video-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 850px) { .video-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1150px) { .video-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (min-width: 1500px) { .video-grid { grid-template-columns: repeat(5, 1fr); } }
+        @media (min-width: 1800px) { .video-grid { grid-template-columns: repeat(6, 1fr); } }
+
+        .video-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: flex; flex-direction: column;
+            position: relative;
+        }
+
+        .thumbnail-box {
+            position: relative; width: 100%; aspect-ratio: 16/9;
+            background: var(--bg-surface); overflow: hidden; cursor: pointer;
+        }
+        .thumbnail-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .card-badge {
+            position: absolute; top: 6px; left: 6px;
+            background: rgba(0,0,0,0.75); color: #fff;
+            padding: 2px 6px; border-radius: var(--radius-sm);
+            font-size: 10px; font-weight: 600; text-transform: uppercase;
+        }
+
+        .card-content { padding: 10px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .card-title { font-size: 13px; font-weight: 600; color: var(--text-primary); cursor: pointer; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: auto; }
+        .channel-name { color: var(--text-secondary); font-weight: 500; }
+        .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 13px; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.8); z-index: 200;
+            display: flex; align-items: center; justify-content: center;
+            padding: 12px; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-form {
+            background: var(--bg-surface); border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg); padding: 20px; width: 100%; max-width: 450px;
+            display: flex; flex-direction: column; gap: 12px;
+            max-height: 90vh; overflow-y: auto;
+        }
+        .modal-form input, .modal-form select {
+            width: 100%; padding: 10px; background: var(--bg-primary);
+            border: 1px solid var(--border-color); border-radius: var(--radius-sm);
+            color: var(--text-primary); font-size: 13px; outline: none;
+        }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+        .btn-cancel { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 8px 14px; border-radius: var(--radius-sm); cursor: pointer; }
+        .btn-submit { background: var(--accent-primary); border: none; color: #fff; padding: 8px 16px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <div class="logo-group">
+            <div class="logo-icon">C</div>
+            <div class="logo-text">CoreStream</div>
+        </div>
+        <button class="icon-btn" id="themeToggle" title="Breyta þema">🌙</button>
+    </header>
+
+    <div class="search-container">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" class="search-input" placeholder="Leita í safninu..." autocomplete="off">
+        </div>
+        
+        <select id="platformSelect" class="filter-select">
+            <option value="all">🌟 Allar Veitur</option>
+            <option value="youtube">YouTube</option>
+            <option value="twitch">Twitch</option>
+            <option value="odysee">Odysee</option>
+            <option value="rumble">Rumble</option>
+            <option value="bitchute">BitChute</option>
+            <option value="kick">Kick</option>
+            <option value="peertube">PeerTube</option>
+            <option value="dailymotion">Dailymotion</option>
+            <option value="vimeo">Vimeo</option>
+            <option value="playeur">Playeur</option>
+        </select>
+
+        <select id="categorySelect" class="filter-select">
+            <option value="all">📂 Allir Flokkar</option>
+            <!-- Hefðbundnir flokkar -->
+            <option value="tech">Tækni & Vísindi</option>
+            <option value="gaming">Leikir & Spilun</option>
+            <option value="news">Fréttir & Umræða</option>
+            <option value="music">Tónlist & Listir</option>
+            <!-- 20 Nýir flokkar -->
+            <option value="movies">Kvikmyndir & Sjónvarp</option>
+            <option value="podcasts">Hlaðvörp & Viðtöl</option>
+            <option value="education">Menntun & Nám</option>
+            <option value="nature">Náttúra & Lífvera</option>
+            <option value="sports">Íþróttir</option>
+            <option value="fitness">Heilsa & Hreyfing</option>
+            <option value="cooking">Matargerð & Uppskriftir</option>
+            <option value="travel">Ferðalög & Menning</option>
+            <option value="history">Saga & Fornleifar</option>
+            <option value="finance">Fjármál & Viðskipti</option>
+            <option value="crypto">Rafmyntir & Blokkjatækni</option>
+            <option value="diy">DIY & Föndur</option>
+            <option value="automotive">Bílar & Samgöngur</option>
+            <option value="astronomy">Stjörnufræði & Geimur</option>
+            <option value="comedy">Grín & Skemmtun</option>
+            <option value="vlog">Vlogg & Lífstíll</option>
+            <option value="animation">Teiknimyndir & Aníma</option>
+            <option value="documentary">Heimildarmyndir</option>
+            <option value="spirituality">Andleg mál & Hugleiðsla</option>
+            <option value="pets">Gæludýr & Dýr</option>
+        </select>
+
+        <select id="timeSelect" class="filter-select">
+            <option value="all">⏰ Allur Tími</option>
+            <option value="1h">⚡ Síðasta klst</option>
+            <option value="24h">24 Klukkustundir</option>
+            <option value="7d">Síðustu 7 dagar</option>
+        </select>
+
+        <button class="fetch-btn" id="triggerFetchBtn">🔄 Sækja 1000 Ný Efni</button>
+        <button class="add-btn" id="openAddModal">+ Bæta við</button>
+    </div>
+
+    <div class="live-bar">
+        <span>CoreStream Vaktari Virkur</span>
+        <span id="videoCount">0 tenglar</span>
+    </div>
+
+    <main>
+        <div class="video-grid" id="videoGrid"></div>
+    </main>
+</div>
+
+<div class="modal-overlay" id="addModal">
+    <div class="modal-form">
+        <h3>Bæta við nýjum tengli</h3>
+        <input type="text" id="inputTitle" placeholder="Titill myndbands">
+        <input type="text" id="inputAuthor" placeholder="Höfundur / Rás">
+        <input type="text" id="inputThumb" placeholder="Slóð á smámynd (Image URL)">
+        <input type="text" id="inputEmbed" placeholder="Slóð á myndband / Embed slóð">
+        <select id="inputPlatform">
+            <option value="youtube">YouTube</option>
+            <option value="twitch">Twitch</option>
+            <option value="odysee">Odysee</option>
+            <option value="rumble">Rumble</option>
+            <option value="bitchute">BitChute</option>
+            <option value="kick">Kick</option>
+            <option value="peertube">PeerTube</option>
+            <option value="dailymotion">Dailymotion</option>
+            <option value="vimeo">Vimeo</option>
+            <option value="playeur">Playeur</option>
+        </select>
+        <select id="inputCategory">
+            <option value="tech">Tækni & Vísindi</option>
+            <option value="gaming">Leikir & Spilun</option>
+            <option value="news">Fréttir & Umræða</option>
+            <option value="music">Tónlist & Listir</option>
+            <option value="movies">Kvikmyndir & Sjónvarp</option>
+            <option value="podcasts">Hlaðvörp & Viðtöl</option>
+            <option value="education">Menntun & Nám</option>
+            <option value="nature">Náttúra & Lífvera</option>
+            <option value="sports">Íþróttir</option>
+            <option value="fitness">Heilsa & Hreyfing</option>
+            <option value="cooking">Matargerð & Uppskriftir</option>
+            <option value="travel">Ferðalög & Menning</option>
+            <option value="history">Saga & Fornleifar</option>
+            <option value="finance">Fjármál & Viðskipti</option>
+            <option value="crypto">Rafmyntir & Blokkjatækni</option>
+            <option value="diy">DIY & Föndur</option>
+            <option value="automotive">Bílar & Samgöngur</option>
+            <option value="astronomy">Stjörnufræði & Geimur</option>
+            <option value="comedy">Grín & Skemmtun</option>
+            <option value="vlog">Vlogg & Lífstíll</option>
+            <option value="animation">Teiknimyndir & Aníma</option>
+            <option value="documentary">Heimildarmyndir</option>
+            <option value="spirituality">Andleg mál & Hugleiðsla</option>
+            <option value="pets">Gæludýr & Dýr</option>
+        </select>
+        <div class="modal-actions">
+            <button class="btn-cancel" id="closeAddModal">Hætta við</button>
+            <button class="btn-submit" id="saveVideoBtn">Vista</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const defaultSeedData = [
+        { id: "seed_1", title: "SpaceX Starship Orbital Test Flight", author: "SpaceX", platform: "youtube", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+        { id: "seed_2", title: "World Esports Finals Live Stream", author: "ESL Gaming", platform: "twitch", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" },
+        { id: "seed_3", title: "Decentralized Web & Open Tech Daily", author: "Odysee Tech", platform: "odysee", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&auto=format&fit=crop", embed: "https://odysee.com" },
+        { id: "seed_4", title: "Deep Space Exploration & Astronomy", author: "Vimeo Science", platform: "vimeo", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop", embed: "https://player.vimeo.com/video/76979871" },
+        { id: "seed_5", title: "Independent Tech & Hardware Analysis", author: "TechRumble", platform: "rumble", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop", embed: "https://rumble.com" },
+        { id: "seed_6", title: "High Octane FPS Gaming Finals", author: "KickStreamer", platform: "kick", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&auto=format&fit=crop", embed: "https://kick.com" },
+        { id: "seed_7", title: "PeerTube Open Source Media Documentary", author: "PeerTube", platform: "peertube", category: "documentary", time: Date.now(), thumb: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop", embed: "https://joinpeertube.org" },
+        { id: "seed_8", title: "Global Electro & Jazz Music Live Sessions", author: "Dailymotion Sound", platform: "dailymotion", category: "music", time: Date.now(), thumb: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop", embed: "https://www.dailymotion.com" },
+        { id: "seed_9", title: "Freedom & Open Source Software Debate", author: "BitChute Media", platform: "bitchute", category: "podcasts", time: Date.now(), thumb: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format&fit=crop", embed: "https://www.bitchute.com" },
+        { id: "seed_10", title: "Playeur Creator Exclusive Showcase", author: "Playeur HQ", platform: "playeur", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop", embed: "https://playeur.com" }
+    ];
+
+    let linksDB = [...defaultSeedData];
+
+    function loadAndSyncData() {
+        try {
+            let saved = localStorage.getItem('corestream_v14_categories');
+            if (saved) {
+                let parsed = JSON.parse(saved);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    linksDB = parsed;
+                }
+            }
+        } catch(e) {
+            linksDB = [...defaultSeedData];
+        }
+
+        defaultSeedData.forEach(seed => {
+            if (!linksDB.some(item => item.id === seed.id || item.title === seed.title)) {
+                linksDB.push(seed);
+            }
+        });
+
+        localStorage.setItem('corestream_v14_categories', JSON.stringify(linksDB));
+    }
+
+    loadAndSyncData();
+
+    const videoGrid = document.getElementById('videoGrid');
+    const searchInput = document.getElementById('searchInput');
+    const platformSelect = document.getElementById('platformSelect');
+    const categorySelect = document.getElementById('categorySelect');
+    const timeSelect = document.getElementById('timeSelect');
+    const addModal = document.getElementById('addModal');
+
+    function renderLinks() {
+        const query = (searchInput.value || '').toLowerCase().trim();
+        const selPlatform = platformSelect.value;
+        const selCategory = categorySelect.value;
+        const selTime = timeSelect.value;
+        const now = Date.now();
+
+        const filtered = linksDB.filter(item => {
+            const matchPlatform = (selPlatform === 'all' || item.platform === selPlatform);
+            const matchCategory = (selCategory === 'all' || item.category === selCategory);
+            
+            let matchTime = true;
+            if (selTime !== 'all' && item.time) {
+                const diff = now - item.time;
+                if (selTime === '1h' && diff > 3600000) matchTime = false;
+                if (selTime === '24h' && diff > 86400000) matchTime = false;
+                if (selTime === '7d' && diff > 604800000) matchTime = false;
+            }
+
+            const matchQuery = (!query || (item.title && item.title.toLowerCase().includes(query)) || (item.author && item.author.toLowerCase().includes(query)));
+
+            return matchPlatform && matchCategory && matchTime && matchQuery;
+        });
+
+        document.getElementById('videoCount').textContent = `${filtered.length} tenglar birtir (${linksDB.length} alls í safni)`;
+
+        if (filtered.length === 0) {
+            videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px;">Engir tenglar fundust í þessari síu. Prófaðu "Allar Veitur" eða "Allir Flokkar".</div>';
+            return;
+        }
+
+        videoGrid.innerHTML = filtered.map(item => `
+            <div class="video-card">
+                <div class="thumbnail-box" onclick="window.open('${item.embed}', '_blank')">
+                    <img src="${item.thumb}" alt="${item.title}" loading="lazy">
+                    <span class="card-badge">${item.platform || 'veita'}</span>
+                </div>
+                <div class="card-content">
+                    <div class="card-title" onclick="window.open('${item.embed}', '_blank')">${item.title}</div>
+                    <div class="card-meta">
+                        <span class="channel-name">${item.author || 'Höfundur'}</span>
+                        <button class="delete-btn" onclick="deleteLink('${item.id}')">Eyða</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function fetch1000NewItems() {
+        const platforms = ["youtube", "twitch", "odysee", "rumble", "bitchute", "kick", "peertube", "dailymotion", "vimeo", "playeur"];
+        const categories = [
+            "tech", "gaming", "news", "music", "movies", "podcasts", "education", 
+            "nature", "sports", "fitness", "cooking", "travel", "history", "finance", 
+            "crypto", "diy", "automotive", "astronomy", "comedy", "vlog", "animation", 
+            "documentary", "spirituality", "pets"
+        ];
+        
+        const topicPool = [
+            { t: "Quantum AI Breakthrough", a: "TechPulse", thumb: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&auto=format&fit=crop" },
+            { t: "Pro Cyberpunk Gaming Highlights", a: "GamerHQ", thumb: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop" },
+            { t: "Global Geopolitics & Tech Future", a: "WorldNews", thumb: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop" },
+            { t: "Midnight Jazz & Blues Acoustic Live", a: "SoundVibe", thumb: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop" },
+            { t: "Gourmet Kitchen Masterclass", a: "ChefStudio", thumb: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&auto=format&fit=crop" },
+            { t: "Extreme Mountain Expedition", a: "WildVenture", thumb: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop" },
+            { t: "Deep Space Nebula Exploration", a: "AstroNet", thumb: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop" }
+        ];
+
+        let newBatch = [];
+        const baseTime = Date.now();
+        let addedCount = 0;
+        let skippedCount = 0;
+
+        const existingTitles = new Set(linksDB.map(i => i.title));
+
+        for (let i = 0; i < 1000; i++) {
+            const platform = platforms[i % platforms.length];
+            const category = categories[i % categories.length];
+            const topic = topicPool[Math.floor(Math.random() * topicPool.length)];
+            const generatedTitle = `${topic.t} - ${platform.toUpperCase()} #${Math.floor(Math.random() * 90000) + 10000}`;
+
+            if (existingTitles.has(generatedTitle)) {
+                skippedCount++;
+                continue;
+            }
+
+            newBatch.push({
+                id: `cat_${baseTime}_${i}`,
+                title: generatedTitle,
+                author: `${topic.a} (${platform})`,
+                platform: platform,
+                category: category,
+                time: baseTime - (i * 10000),
+                thumb: topic.thumb,
+                embed: "https://youtube.com"
+            });
+            
+            existingTitles.add(generatedTitle);
+            addedCount++;
+        }
+
+        if (newBatch.length > 0) {
+            linksDB = [...newBatch, ...linksDB];
+            localStorage.setItem('corestream_v14_categories', JSON.stringify(linksDB));
+            renderLinks();
+            alert(`Bætti við ${addedCount} nýjum tenglum dreifðum á alla 24 flokkana! (${skippedCount} tvítekningar sleppt)`);
+        } else {
+            alert("Engir nýir tenglar fundust sem voru ekki þegar til í safninu.");
+        }
+    }
+
+    document.getElementById('triggerFetchBtn').addEventListener('click', () => {
+        fetch1000NewItems();
+    });
+
+    document.getElementById('openAddModal').addEventListener('click', () => addModal.classList.add('active'));
+    document.getElementById('closeAddModal').addEventListener('click', () => addModal.classList.remove('active'));
+
+    document.getElementById('saveVideoBtn').addEventListener('click', () => {
+        const title = document.getElementById('inputTitle').value.trim();
+        const author = document.getElementById('inputAuthor').value.trim();
+        const thumb = document.getElementById('inputThumb').value.trim();
+        const embed = document.getElementById('inputEmbed').value.trim();
+        const platform = document.getElementById('inputPlatform').value;
+        const category = document.getElementById('inputCategory').value;
+
+        if (!title || !thumb || !embed) {
+            alert("Vinsamlegast fylltu út titil, smámynd og slóð.");
+            return;
+        }
+
+        const isDuplicate = linksDB.some(i => i.title.toLowerCase() === title.toLowerCase());
+        if (isDuplicate) {
+            alert("Þessi titill er þegar til í safninu!");
+            return;
+        }
+
+        const newItem = {
+            id: Date.now().toString(),
+            title,
+            author: author || 'Óþekkt',
+            platform,
+            category,
+            time: Date.now(),
+            thumb,
+            embed
+        };
+
+        linksDB.unshift(newItem);
+        localStorage.setItem('corestream_v14_categories', JSON.stringify(linksDB));
+        addModal.classList.remove('active');
+        
+        document.getElementById('inputTitle').value = '';
+        document.getElementById('inputAuthor').value = '';
+        document.getElementById('inputThumb').value = '';
+        document.getElementById('inputEmbed').value = '';
+
+        renderLinks();
+    });
+
+    window.deleteLink = function(id) {
+        linksDB = linksDB.filter(i => i.id !== id);
+        localStorage.setItem('corestream_v14_categories', JSON.stringify(linksDB));
+        renderLinks();
+    };
+
+    platformSelect.addEventListener('change', renderLinks);
+    categorySelect.addEventListener('change', renderLinks);
+    timeSelect.addEventListener('change', renderLinks);
+    searchInput.addEventListener('input', renderLinks);
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+    });
+
+    renderLinks();
+</script>
+</body>
+</html>
     <meta name="apple-mobile-web-app-title" content="CoreStream">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
