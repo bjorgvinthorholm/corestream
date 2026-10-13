@@ -404,7 +404,7 @@
         let removed = 0;
 
         for (const item of linksDB) {
-            const cleanKey = `${normalizeTitle(item.title)}_${item.platform}`;
+            const cleanKey = normalizeTitle(item.title);
             if (!seen.has(cleanKey)) {
                 seen.add(cleanKey);
                 unique.push(item);
@@ -415,7 +415,7 @@
 
         linksDB = unique;
         try {
-            localStorage.setItem('corestream_v18_fixed', JSON.stringify(linksDB));
+            localStorage.setItem('corestream_v19_fresh', JSON.stringify(linksDB));
         } catch (e) {}
 
         return removed;
@@ -423,7 +423,7 @@
 
     function loadAndSyncData() {
         try {
-            let saved = localStorage.getItem('corestream_v18_fixed');
+            let saved = localStorage.getItem('corestream_v19_fresh');
             if (saved) {
                 let parsed = JSON.parse(saved);
                 if (Array.isArray(parsed) && parsed.length > 0) {
@@ -522,26 +522,24 @@
         let newBatch = [];
         const baseTime = Date.now();
         let addedCount = 0;
-        let skippedCount = 0;
 
-        const existingKeys = new Set(linksDB.map(i => `${normalizeTitle(i.title)}_${i.platform}`));
+        const existingTitles = new Set(linksDB.map(i => normalizeTitle(i.title)));
 
         for (let i = 0; i < 10000; i++) {
-            const platform = platforms[i % platforms.length];
-            const category = categories[i % categories.length];
-            const topic = topicPool[i % topicPool.length];
+            const platform = platforms[Math.floor(Math.random() * platforms.length)];
+            const category = categories[Math.floor(Math.random() * categories.length)];
+            const topic = topicPool[Math.floor(Math.random() * topicPool.length)];
             
-            // Sérstakt einkvæmt heiti fyrir hvert stak svo þau fari ekki í tvítekningasíuna
-            const generatedTitle = `${topic.t} Vol.${Math.floor(i / topicPool.length) + 1} (${platform.toUpperCase()})`;
-            const key = `${normalizeTitle(generatedTitle)}_${platform}`;
+            // Býr til alveg einkvæmt heiti í hvert skipti
+            const generatedTitle = `${topic.t} #${linksDB.length + addedCount + 1}`;
+            const cleanTitle = normalizeTitle(generatedTitle);
 
-            if (existingKeys.has(key)) {
-                skippedCount++;
+            if (existingTitles.has(cleanTitle)) {
                 continue;
             }
 
             newBatch.push({
-                id: `bulk10k_${baseTime}_${i}`,
+                id: `fresh10k_${baseTime}_${i}`,
                 title: generatedTitle,
                 author: `${topic.a} (${platform})`,
                 platform: platform,
@@ -551,14 +549,14 @@
                 embed: "https://youtube.com"
             });
             
-            existingKeys.add(key);
+            existingTitles.add(cleanTitle);
             addedCount++;
         }
 
         if (newBatch.length > 0) {
             linksDB = [...newBatch, ...linksDB];
             try {
-                localStorage.setItem('corestream_v18_fixed', JSON.stringify(linksDB));
+                localStorage.setItem('corestream_v19_fresh', JSON.stringify(linksDB));
             } catch (e) {}
             renderLinks();
             alert(`Bætti við ${addedCount} nýjum einkvæmum tenglum!`);
@@ -619,7 +617,7 @@
     window.deleteLink = function(id) {
         linksDB = linksDB.filter(i => i.id !== id);
         try {
-            localStorage.setItem('corestream_v18_fixed', JSON.stringify(linksDB));
+            localStorage.setItem('corestream_v19_fresh', JSON.stringify(linksDB));
         } catch (e) {}
         renderLinks();
     };
