@@ -163,6 +163,8 @@
             border-bottom: 1px solid var(--border-color);
             display: flex;
             gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         .search-box {
@@ -170,6 +172,7 @@
             display: flex;
             align-items: center;
             flex: 1;
+            min-width: 180px;
         }
 
         .search-icon {
@@ -198,6 +201,26 @@
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
+        /* Fellivalmyndir á sömu línu */
+        .filter-select {
+            height: 38px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            color: var(--text-primary);
+            padding: 0 16px;
+            font-size: 13px;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .filter-select:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
         .add-btn {
             background: var(--accent-primary);
             border: none;
@@ -214,45 +237,6 @@
 
         .add-btn:hover {
             background: var(--accent-hover);
-        }
-
-        .horizontal-scroller {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            padding: 8px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            border-bottom: 1px solid var(--border-color);
-            background: var(--bg-primary);
-        }
-
-        .horizontal-scroller::-webkit-scrollbar {
-            display: none;
-        }
-
-        .chip {
-            flex: 0 0 auto;
-            padding: 5px 12px;
-            border-radius: var(--radius-full);
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.2s ease;
-            user-select: none;
-        }
-
-        .chip.active {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
-            color: #ffffff;
-            box-shadow: 0 2px 8px var(--accent-glow);
         }
 
         .live-bar {
@@ -427,15 +411,6 @@
         .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
         .btn-cancel { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 8px 14px; border-radius: var(--radius-sm); cursor: pointer; }
         .btn-submit { background: var(--accent-primary); border: none; color: #fff; padding: 8px 16px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; }
-
-        .mobile-bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height);
-            background: var(--bg-glass); backdrop-filter: blur(16px);
-            border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-around; z-index: 90;
-        }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 1px; color: var(--text-muted); font-size: 10px; background: none; border: none; cursor: pointer; flex: 1; }
-        .nav-item.active { color: var(--accent-primary); }
-        @media (min-width: 768px) { .mobile-bottom-nav { display: none; } body { padding-bottom: 0; } }
     </style>
 </head>
 <body>
@@ -456,16 +431,40 @@
             <span class="search-icon">🔍</span>
             <input type="text" id="searchInput" class="search-input" placeholder="Leita í safninu..." autocomplete="off">
         </div>
-        <button class="add-btn" id="openAddModal">+ Bæta við</button>
-    </div>
+        
+        <!-- Fellivalmynd fyrir veitur -->
+        <select id="platformSelect" class="filter-select">
+            <option value="all">🌟 Allar Veitur</option>
+            <option value="youtube">YouTube</option>
+            <option value="twitch">Twitch</option>
+            <option value="odysee">Odysee</option>
+            <option value="rumble">Rumble</option>
+            <option value="bitchute">BitChute</option>
+            <option value="kick">Kick</option>
+            <option value="peertube">PeerTube</option>
+            <option value="dailymotion">Dailymotion</option>
+            <option value="vimeo">Vimeo</option>
+            <option value="playeur">Playeur</option>
+        </select>
 
-    <div class="horizontal-scroller" id="platformChips">
-        <div class="chip active" data-platform="all">Allar Veitur</div>
-        <div class="chip" data-platform="youtube">YouTube</div>
-        <div class="chip" data-platform="twitch">Twitch</div>
-        <div class="chip" data-platform="odysee">Odysee</div>
-        <div class="chip" data-platform="rumble">Rumble</div>
-        <div class="chip" data-platform="vimeo">Vimeo</div>
+        <!-- Fellivalmynd fyrir flokka -->
+        <select id="categorySelect" class="filter-select">
+            <option value="all">📂 Allir Flokkar</option>
+            <option value="tech">Tækni & Vísindi</option>
+            <option value="gaming">Leikir & Spilun</option>
+            <option value="news">Fréttir & Umræða</option>
+            <option value="music">Tónlist & Listir</option>
+        </select>
+
+        <!-- Fellivalmynd fyrir tíma -->
+        <select id="timeSelect" class="filter-select">
+            <option value="all">⏰ Allur Tími</option>
+            <option value="1h">⚡ Síðasta klst</option>
+            <option value="24h">24 Klukkustundir</option>
+            <option value="7d">Síðustu 7 dagar</option>
+        </select>
+
+        <button class="add-btn" id="openAddModal">+ Bæta við</button>
     </div>
 
     <div class="live-bar">
@@ -489,12 +488,23 @@
         <input type="text" id="inputAuthor" placeholder="Höfundur / Rás">
         <input type="text" id="inputThumb" placeholder="Slóð á smámynd (Image URL)">
         <input type="text" id="inputEmbed" placeholder="Slóð á myndband / Embed slóð">
-        <select id="inputPlatform">
+        <select id="inputPlatform" style="margin-bottom: 4px;">
             <option value="youtube">YouTube</option>
             <option value="twitch">Twitch</option>
             <option value="odysee">Odysee</option>
             <option value="rumble">Rumble</option>
+            <option value="bitchute">BitChute</option>
+            <option value="kick">Kick</option>
+            <option value="peertube">PeerTube</option>
+            <option value="dailymotion">Dailymotion</option>
             <option value="vimeo">Vimeo</option>
+            <option value="playeur">Playeur</option>
+        </select>
+        <select id="inputCategory">
+            <option value="tech">Tækni & Vísindi</option>
+            <option value="gaming">Leikir & Spilun</option>
+            <option value="news">Fréttir & Umræða</option>
+            <option value="music">Tónlist & Listir</option>
         </select>
         <div class="modal-actions">
             <button class="btn-cancel" id="closeAddModal">Hætta við</button>
@@ -505,21 +515,31 @@
 
 <script>
     let currentPlatform = 'all';
+    let currentCategory = 'all';
+    let currentTimeFilter = 'all';
     
-    // Vistaðir tenglar í LocalStorage eða sjálfgefin sýnishorn
     let linksDB = JSON.parse(localStorage.getItem('corestream_links') || JSON.stringify([
-        { id: "1", title: "SpaceX Starship Orbital Launch", author: "SpaceX", platform: "youtube", thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-        { id: "2", title: "Esports Championship Live", author: "ESL", platform: "twitch", thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" }
+        { id: "1", title: "SpaceX Starship Orbital Launch", author: "SpaceX", platform: "youtube", category: "tech", timestamp: Date.now() - 600000, thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+        { id: "2", title: "Esports Championship Live", author: "ESL", platform: "twitch", category: "gaming", timestamp: Date.now() - 1500000, thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" }
     ]));
 
     const videoGrid = document.getElementById('videoGrid');
     const searchInput = document.getElementById('searchInput');
+    const platformSelect = document.getElementById('platformSelect');
+    const categorySelect = document.getElementById('categorySelect');
+    const timeSelect = document.getElementById('timeSelect');
     const addModal = document.getElementById('addModal');
 
     function renderLinks() {
         const query = searchInput.value.toLowerCase().trim();
+        const now = Date.now();
+
         const filtered = linksDB.filter(item => {
             if (currentPlatform !== 'all' && item.platform !== currentPlatform) return false;
+            if (currentCategory !== 'all' && item.category !== currentCategory) return false;
+            if (currentTimeFilter === '1h' && (now - (item.timestamp || now) > 3600000)) return false;
+            if (currentTimeFilter === '24h' && (now - (item.timestamp || now) > 86400000)) return false;
+            if (currentTimeFilter === '7d' && (now - (item.timestamp || now) > 604800000)) return false;
             if (query && !item.title.toLowerCase().includes(query) && !item.author.toLowerCase().includes(query)) return false;
             return true;
         });
@@ -552,6 +572,7 @@
         const thumb = document.getElementById('inputThumb').value.trim();
         const embed = document.getElementById('inputEmbed').value.trim();
         const platform = document.getElementById('inputPlatform').value;
+        const category = document.getElementById('inputCategory').value;
 
         if (!title || !thumb || !embed) {
             alert("Vinsamlegast fylltu út titil, smámynd og slóð.");
@@ -563,6 +584,8 @@
             title,
             author: author || 'Óþekkt',
             platform,
+            category,
+            timestamp: Date.now(),
             thumb,
             embed
         };
@@ -585,12 +608,18 @@
         renderLinks();
     };
 
-    document.getElementById('platformChips').addEventListener('click', (e) => {
-        const chip = e.target.closest('.chip');
-        if (!chip) return;
-        document.querySelectorAll('#platformChips .chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        currentPlatform = chip.dataset.platform;
+    platformSelect.addEventListener('change', (e) => {
+        currentPlatform = e.target.value;
+        renderLinks();
+    });
+
+    categorySelect.addEventListener('change', (e) => {
+        currentCategory = e.target.value;
+        renderLinks();
+    });
+
+    timeSelect.addEventListener('change', (e) => {
+        currentTimeFilter = e.target.value;
         renderLinks();
     });
 
