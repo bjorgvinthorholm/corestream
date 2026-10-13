@@ -201,7 +201,6 @@
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
-        /* Fellivalmyndir á sömu línu */
         .filter-select {
             height: 38px;
             background: var(--bg-primary);
@@ -432,7 +431,6 @@
             <input type="text" id="searchInput" class="search-input" placeholder="Leita í safninu..." autocomplete="off">
         </div>
         
-        <!-- Fellivalmynd fyrir veitur -->
         <select id="platformSelect" class="filter-select">
             <option value="all">🌟 Allar Veitur</option>
             <option value="youtube">YouTube</option>
@@ -447,7 +445,6 @@
             <option value="playeur">Playeur</option>
         </select>
 
-        <!-- Fellivalmynd fyrir flokka -->
         <select id="categorySelect" class="filter-select">
             <option value="all">📂 Allir Flokkar</option>
             <option value="tech">Tækni & Vísindi</option>
@@ -456,7 +453,6 @@
             <option value="music">Tónlist & Listir</option>
         </select>
 
-        <!-- Fellivalmynd fyrir tíma -->
         <select id="timeSelect" class="filter-select">
             <option value="all">⏰ Allur Tími</option>
             <option value="1h">⚡ Síðasta klst</option>
@@ -480,7 +476,6 @@
     </main>
 </div>
 
-<!-- Modal til að bæta við nýjum hlekk -->
 <div class="modal-overlay" id="addModal">
     <div class="modal-form">
         <h3>Bæta við nýjum tengli</h3>
@@ -518,10 +513,18 @@
     let currentCategory = 'all';
     let currentTimeFilter = 'all';
     
-    let linksDB = JSON.parse(localStorage.getItem('corestream_links') || JSON.stringify([
+    // Sjálfgefin sýnishorn ef geymslan er tóm eða vantar flokka
+    const defaultLinks = [
         { id: "1", title: "SpaceX Starship Orbital Launch", author: "SpaceX", platform: "youtube", category: "tech", timestamp: Date.now() - 600000, thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
         { id: "2", title: "Esports Championship Live", author: "ESL", platform: "twitch", category: "gaming", timestamp: Date.now() - 1500000, thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" }
-    ]));
+    ];
+
+    let storedLinks = JSON.parse(localStorage.getItem('corestream_links') || '[]');
+    if (storedLinks.length === 0 || !storedLinks[0].category) {
+        storedLinks = defaultLinks;
+        localStorage.setItem('corestream_links', JSON.stringify(storedLinks));
+    }
+    let linksDB = storedLinks;
 
     const videoGrid = document.getElementById('videoGrid');
     const searchInput = document.getElementById('searchInput');
