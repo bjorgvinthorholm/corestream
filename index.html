@@ -393,41 +393,37 @@
 
     let linksDB = [...defaultSeedData];
 
-    // Nákvæm hreinsun á titli til að finna tvítekningar óháð númerum (t.d. #1, #2) og stafsetningu
     function normalizeTitle(str) {
         if (!str) return '';
-        return str.toLowerCase()
-                  .replace(/#\d+/g, '') // Fjarlægir t.d. #1, #2 o.s.frv.
-                  .replace(/\s+/g, ' ')
-                  .trim();
+        return str.toLowerCase().trim().replace(/\s+/g, ' ');
     }
 
     function removeDuplicatesFromDB() {
-        const seenTitles = new Set();
-        const uniqueDB = [];
-        let removedCount = 0;
+        const seen = new Set();
+        const unique = [];
+        let removed = 0;
 
         for (const item of linksDB) {
-            const cleanT = normalizeTitle(item.title);
-            if (!seenTitles.has(cleanT)) {
-                seenTitles.add(cleanT);
-                uniqueDB.push(item);
+            const cleanKey = `${normalizeTitle(item.title)}_${item.platform}`;
+            if (!seen.has(cleanKey)) {
+                seen.add(cleanKey);
+                unique.push(item);
             } else {
-                removedCount++;
+                removed++;
             }
         }
 
-        linksDB = uniqueDB;
+        linksDB = unique;
         try {
-            localStorage.setItem('corestream_v17_clean', JSON.stringify(linksDB));
+            localStorage.setItem('corestream_v18_fixed', JSON.stringify(linksDB));
         } catch (e) {}
 
-        return removedCount;
+        return removed;
     }
 
     function loadAndSyncData() {
         try {
-            let saved = localStorage.getItem('corestream_v17_clean');
+            let saved = localStorage.getItem('corestream_v18_fixed');
             if (saved) {
                 let parsed = JSON.parse(saved);
                 if (Array.isArray(parsed) && parsed.length > 0) {
@@ -480,7 +476,7 @@
             return matchPlatform && matchCategory && matchTime && matchQuery;
         });
 
-        document.getElementById('videoCount').textContent = `${filtered.length} tenglar birtir (${linksDB.length} alls án tvítekninga)`;
+        document.getElementById('videoCount').textContent = `${filtered.length} birtir (${linksDB.length} alls í safni)`;
 
         if (filtered.length === 0) {
             videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px;">Engir tenglar fundust í þessari síu. Prófaðu "Allar Veitur" eða "Allir Flokkar".</div>';
@@ -528,42 +524,46 @@
         let addedCount = 0;
         let skippedCount = 0;
 
-        const existingTitles = new Set(linksDB.map(i => normalizeTitle(i.title)));
+        const existingKeys = new Set(linksDB.map(i => `${normalizeTitle(i.title)}_${i.platform}`));
 
         for (let i = 0; i < 10000; i++) {
             const platform = platforms[i % platforms.length];
             const category = categories[i % categories.length];
-            const topic = topicPool[Math.floor(Math.random() * topicPool.length)];
-            const generatedTitle = `${topic.t} #${i + 1}`;
-            const cleanGenerated = normalizeTitle(generatedTitle);
+            const topic = topicPool[i % topicPool.length];
+            
+            // Sérstakt einkvæmt heiti fyrir hvert stak svo þau fari ekki í tvítekningasíuna
+            const generatedTitle = `${topic.t} Vol.${Math.floor(i / topicPool.length) + 1} (${platform.toUpperCase()})`;
+            const key = `${normalizeTitle(generatedTitle)}_${platform}`;
 
-            if (existingTitles.has(cleanGenerated)) {
+            if (existingKeys.has(key)) {
                 skippedCount++;
                 continue;
             }
 
             newBatch.push({
-                id: `clean10k_${baseTime}_${i}`,
+                id: `bulk10k_${baseTime}_${i}`,
                 title: generatedTitle,
                 author: `${topic.a} (${platform})`,
                 platform: platform,
                 category: category,
-                time: baseTime - (i * 1000),
+                time: baseTime - (i * 500),
                 thumb: topic.thumb,
                 embed: "https://youtube.com"
             });
             
-            existingTitles.add(cleanGenerated);
+            existingKeys.add(key);
             addedCount++;
         }
 
         if (newBatch.length > 0) {
             linksDB = [...newBatch, ...linksDB];
-            removeDuplicatesFromDB();
+            try {
+                localStorage.setItem('corestream_v18_fixed', JSON.stringify(linksDB));
+            } catch (e) {}
             renderLinks();
-            alert(`Bætti við ${addedCount} nýjum einkvæmum tenglum! (${skippedCount} tvítekningar síaðar út)`);
+            alert(`Bætti við ${addedCount} nýjum einkvæmum tenglum!`);
         } else {
-            alert("Öll þessi myndbönd eru þegar til í safninu þínu.");
+            alert("Söfnunin fann enga nýja tengla til að bæta við.");
         }
     }
 
@@ -574,7 +574,7 @@
     document.getElementById('cleanDupsBtn').addEventListener('click', () => {
         const removed = removeDuplicatesFromDB();
         renderLinks();
-        alert(`Hreinsun lokið! Eyddi ${removed} tvíteknum myndböndum úr safninu.`);
+        alert(`Hreinsun lokið! Eyddi ${removed} tvíteknum tenglum.`);
     });
 
     document.getElementById('openAddModal').addEventListener('click', () => addModal.classList.add('active'));
@@ -590,13 +590,6 @@
 
         if (!title || !thumb || !embed) {
             alert("Vinsamlegast fylltu út titil, smámynd og slóð.");
-            return;
-        }
-
-        const cleanInputTitle = normalizeTitle(title);
-        const isDuplicate = linksDB.some(i => normalizeTitle(i.title) === cleanInputTitle);
-        if (isDuplicate) {
-            alert("Þetta myndband (sami titill) er þegar til í safninu!");
             return;
         }
 
@@ -626,7 +619,7 @@
     window.deleteLink = function(id) {
         linksDB = linksDB.filter(i => i.id !== id);
         try {
-            localStorage.setItem('corestream_v17_clean', JSON.stringify(linksDB));
+            localStorage.setItem('corestream_v18_fixed', JSON.stringify(linksDB));
         } catch (e) {}
         renderLinks();
     };
