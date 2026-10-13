@@ -13,9 +13,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CoreStream">
     
-    <!-- Meta tags for SEO & Global Reach -->
-    <meta name="description" content="CoreStream - Minimalist and high-performance global video aggregation portal featuring content from 10+ major platforms in real-time.">
-    
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +23,7 @@
             --bg-primary: #0a0a0c;
             --bg-surface: #121216;
             --bg-card: #18181f;
-            --bg-glass: rgba(24, 24, 31, 0.85);
+            --bg-glass: rgba(24, 24, 31, 0.90);
             --border-color: rgba(255, 255, 255, 0.08);
             --border-highlight: rgba(255, 255, 255, 0.18);
             
@@ -46,7 +43,7 @@
             --radius-lg: 18px;
             --radius-full: 9999px;
             
-            --header-height: 60px;
+            --header-height: 56px;
             --nav-height: 52px;
         }
 
@@ -54,7 +51,7 @@
             --bg-primary: #f8fafc;
             --bg-surface: #ffffff;
             --bg-card: #ffffff;
-            --bg-glass: rgba(255, 255, 255, 0.9);
+            --bg-glass: rgba(255, 255, 255, 0.92);
             --border-color: rgba(0, 0, 0, 0.08);
             --border-highlight: rgba(0, 0, 0, 0.15);
             
@@ -81,28 +78,18 @@
             line-height: 1.5;
             overflow-x: hidden;
             padding-bottom: env(safe-area-inset-bottom, 20px);
-            font-size: 15px;
+            font-size: 14px;
             -webkit-font-smoothing: antialiased;
         }
 
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: var(--radius-full);
-        }
-
         .app-container {
-            max-width: 1400px;
+            width: 100%;
+            max-width: 1920px;
             margin: 0 auto;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            padding: 0 12px;
         }
 
         header {
@@ -117,7 +104,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 16px;
+            padding: 0 8px;
         }
 
         .logo-group {
@@ -127,8 +114,8 @@
         }
 
         .logo-icon {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             background: linear-gradient(135deg, var(--accent-primary), #a855f7);
             border-radius: var(--radius-sm);
             display: flex;
@@ -136,12 +123,12 @@
             justify-content: center;
             color: #fff;
             font-weight: 700;
-            font-size: 16px;
-            box-shadow: 0 0 12px var(--accent-glow);
+            font-size: 15px;
+            box-shadow: 0 0 10px var(--accent-glow);
         }
 
         .logo-text {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             letter-spacing: -0.02em;
             background: linear-gradient(90deg, var(--text-primary), var(--text-secondary));
@@ -152,38 +139,37 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .icon-btn {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            width: 38px;
-            height: 38px;
+            width: 34px;
+            height: 34px;
             border-radius: var(--radius-full);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 16px;
-        }
-
-        .icon-btn:active {
-            transform: scale(0.92);
+            font-size: 15px;
         }
 
         .search-container {
-            padding: 12px 16px;
+            padding: 10px 8px;
             background: var(--bg-surface);
             border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: 8px;
         }
 
         .search-box {
             position: relative;
             display: flex;
             align-items: center;
+            flex: 1;
         }
 
         .search-icon {
@@ -191,18 +177,18 @@
             left: 14px;
             color: var(--text-muted);
             pointer-events: none;
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .search-input {
             width: 100%;
-            height: 42px;
+            height: 38px;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-full);
-            padding: 0 40px 0 42px;
+            padding: 0 38px 0 38px;
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
             transition: all 0.2s ease;
         }
@@ -212,22 +198,29 @@
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
-        .clear-search {
-            position: absolute;
-            right: 12px;
-            background: none;
+        .add-btn {
+            background: var(--accent-primary);
             border: none;
-            color: var(--text-muted);
-            font-size: 16px;
+            color: #fff;
+            padding: 0 16px;
+            height: 38px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
-            display: none;
+            transition: background 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .add-btn:hover {
+            background: var(--accent-hover);
         }
 
         .horizontal-scroller {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             overflow-x: auto;
-            padding: 10px 16px;
+            padding: 8px;
             scrollbar-width: none;
             -ms-overflow-style: none;
             border-bottom: 1px solid var(--border-color);
@@ -240,23 +233,19 @@
 
         .chip {
             flex: 0 0 auto;
-            padding: 7px 14px;
+            padding: 5px 12px;
             border-radius: var(--radius-full);
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             transition: all 0.2s ease;
             user-select: none;
-        }
-
-        .chip:active {
-            transform: scale(0.95);
         }
 
         .chip.active {
@@ -266,19 +255,12 @@
             box-shadow: 0 2px 8px var(--accent-glow);
         }
 
-        .chip .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: currentColor;
-        }
-
         .live-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 16px;
-            font-size: 12px;
+            padding: 6px 10px;
+            font-size: 11px;
             color: var(--text-muted);
             background: var(--bg-surface);
             border-bottom: 1px solid var(--border-color);
@@ -287,14 +269,14 @@
         .pulse-badge {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             color: var(--badge-new);
             font-weight: 600;
         }
 
         .pulse-dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             background: var(--badge-new);
             border-radius: 50%;
             animation: pulse 1.5s infinite;
@@ -308,24 +290,20 @@
 
         main {
             flex: 1;
-            padding: 16px;
+            padding: 12px 4px;
         }
 
         .video-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 12px;
         }
 
-        @media (min-width: 640px) {
-            .video-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (min-width: 1024px) {
-            .video-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (min-width: 1280px) {
-            .video-grid { grid-template-columns: repeat(4, 1fr); }
-        }
+        @media (min-width: 500px) { .video-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 850px) { .video-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1150px) { .video-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (min-width: 1500px) { .video-grid { grid-template-columns: repeat(5, 1fr); } }
+        @media (min-width: 1800px) { .video-grid { grid-template-columns: repeat(6, 1fr); } }
 
         .video-card {
             background: var(--bg-card);
@@ -340,6 +318,7 @@
 
         .video-card:hover {
             border-color: var(--border-highlight);
+            transform: translateY(-2px);
         }
 
         .thumbnail-box {
@@ -364,47 +343,30 @@
 
         .card-badge {
             position: absolute;
-            top: 8px;
-            left: 8px;
+            top: 6px;
+            left: 6px;
             background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            color: #fff;
-            padding: 3px 8px;
-            border-radius: var(--radius-sm);
-            font-size: 11px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
-
-        .duration-tag {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(6px);
             color: #fff;
             padding: 2px 6px;
             border-radius: var(--radius-sm);
-            font-size: 11px;
-            font-weight: 500;
-            font-family: monospace;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
         }
 
         .card-content {
-            padding: 12px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             flex: 1;
         }
 
         .card-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            line-height: 1.4;
+            line-height: 1.35;
             color: var(--text-primary);
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -413,15 +375,11 @@
             cursor: pointer;
         }
 
-        .card-title:hover {
-            color: var(--accent-primary);
-        }
-
         .card-meta {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             margin-top: auto;
         }
@@ -429,231 +387,55 @@
         .channel-name {
             color: var(--text-secondary);
             font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 140px;
         }
 
-        .card-actions {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .action-btn {
-            background: transparent;
+        .delete-btn {
+            background: none;
             border: none;
-            color: var(--text-muted);
+            color: #ef4444;
             cursor: pointer;
-            padding: 4px;
-            border-radius: var(--radius-sm);
-            font-size: 15px;
-            transition: color 0.2s ease, background 0.2s ease;
-        }
-
-        .action-btn:hover {
-            color: var(--text-primary);
-            background: var(--bg-surface);
-        }
-
-        .action-btn.bookmarked {
-            color: #f59e0b;
+            font-size: 13px;
+            padding: 2px 4px;
         }
 
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.88);
-            backdrop-filter: blur(12px);
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
             z-index: 200;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             padding: 12px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.2s ease;
         }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-container {
-            width: 100%;
-            max-width: 900px;
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-form {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-            max-height: 90vh;
-        }
-
-        .modal-header {
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .modal-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding-right: 12px;
-        }
-
-        .close-modal {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-
-        .player-wrapper {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: #000;
-        }
-
-        .player-wrapper iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .bottom-sheet {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: var(--bg-surface);
-            border-top: 1px solid var(--border-color);
-            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
             padding: 20px;
-            z-index: 300;
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+            width: 100%; max-width: 450px;
+            display: flex; flex-direction: column; gap: 12px;
         }
-
-        .bottom-sheet.active {
-            transform: translateY(0);
+        .modal-form h3 { font-size: 16px; margin-bottom: 4px; }
+        .modal-form input, .modal-form select {
+            width: 100%; padding: 10px; background: var(--bg-primary);
+            border: 1px solid var(--border-color); border-radius: var(--radius-sm);
+            color: var(--text-primary); font-size: 13px; outline: none;
         }
-
-        .sheet-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .sheet-title {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .lang-list {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .lang-btn {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 12px;
-            border-radius: var(--radius-md);
-            text-align: left;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .lang-btn.active {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-            background: var(--accent-glow);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-
-        .empty-icon {
-            font-size: 40px;
-            margin-bottom: 12px;
-            opacity: 0.5;
-        }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+        .btn-cancel { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 8px 14px; border-radius: var(--radius-sm); cursor: pointer; }
+        .btn-submit { background: var(--accent-primary); border: none; color: #fff; padding: 8px 16px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; }
 
         .mobile-bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: var(--nav-height);
-            background: var(--bg-glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            z-index: 90;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height);
+            background: var(--bg-glass); backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-around; z-index: 90;
         }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            color: var(--text-muted);
-            font-size: 10px;
-            text-decoration: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            flex: 1;
-        }
-
-        .nav-item.active {
-            color: var(--accent-primary);
-        }
-
-        .nav-icon {
-            font-size: 18px;
-        }
-
-        @media (min-width: 768px) {
-            .mobile-bottom-nav { display: none; }
-            body { padding-bottom: 0; }
-        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 1px; color: var(--text-muted); font-size: 10px; background: none; border: none; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--accent-primary); }
+        @media (min-width: 768px) { .mobile-bottom-nav { display: none; } body { padding-bottom: 0; } }
     </style>
 </head>
 <body>
@@ -664,270 +446,143 @@
             <div class="logo-icon">C</div>
             <div class="logo-text">CoreStream</div>
         </div>
-
         <div class="header-actions">
             <button class="icon-btn" id="themeToggle" title="Breyta þema">🌙</button>
-            <button class="icon-btn" id="langBtn" title="Tungumál">🌐</button>
         </div>
     </header>
 
     <div class="search-container">
         <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" class="search-input" placeholder="Leita í CoreStream..." autocomplete="off">
-            <button class="clear-search" id="clearSearch">✕</button>
+            <input type="text" id="searchInput" class="search-input" placeholder="Leita í safninu..." autocomplete="off">
         </div>
+        <button class="add-btn" id="openAddModal">+ Bæta við</button>
     </div>
 
     <div class="horizontal-scroller" id="platformChips">
-        <div class="chip active" data-platform="all"><span class="dot"></span><span data-i18n="all">Allar Veitur</span></div>
+        <div class="chip active" data-platform="all">Allar Veitur</div>
         <div class="chip" data-platform="youtube">YouTube</div>
         <div class="chip" data-platform="twitch">Twitch</div>
         <div class="chip" data-platform="odysee">Odysee</div>
         <div class="chip" data-platform="rumble">Rumble</div>
-        <div class="chip" data-platform="bitchute">BitChute</div>
-        <div class="chip" data-platform="kick">Kick</div>
-        <div class="chip" data-platform="peertube">PeerTube</div>
-        <div class="chip" data-platform="dailymotion">Dailymotion</div>
         <div class="chip" data-platform="vimeo">Vimeo</div>
-        <div class="chip" data-platform="playeur">Playeur</div>
-    </div>
-
-    <div class="horizontal-scroller" id="timeChips" style="background: var(--bg-surface); padding-top: 6px; padding-bottom: 6px;">
-        <div class="chip active" data-time="all" data-i18n="timeAll">Allur Tími</div>
-        <div class="chip" data-time="1h" data-i18n="time1h">⚡ Síðasta klst</div>
-        <div class="chip" data-time="24h" data-i18n="time24h">24 Klukkustundir</div>
-        <div class="chip" data-time="7d" data-i18n="time7d">Síðustu 7 dagar</div>
     </div>
 
     <div class="live-bar">
         <div class="pulse-badge">
             <div class="pulse-dot"></div>
-            <span id="scanStatus" data-i18n="liveScanner">CoreStream Vaktari Virkur</span>
+            <span>CoreStream Vaktari Virkur (24/7 Safnari)</span>
         </div>
-        <span id="videoCount">0 myndbönd</span>
+        <span id="videoCount">0 tenglar</span>
     </div>
 
     <main>
         <div class="video-grid" id="videoGrid"></div>
-        <div class="empty-state" id="emptyState" style="display: none;">
-            <div class="empty-icon">📺</div>
-            <p data-i18n="noResults">Engin myndbönd fundust miðað við þessar síur.</p>
-        </div>
     </main>
 </div>
 
-<nav class="mobile-bottom-nav">
-    <button class="nav-item active" id="navHome">
-        <span class="nav-icon">🏠</span>
-        <span data-i18n="navHome">Heim</span>
-    </button>
-    <button class="nav-item" id="navTrending">
-        <span class="nav-icon">🔥</span>
-        <span data-i18n="navTrending">Vinsælt</span>
-    </button>
-    <button class="nav-item" id="navBookmarks">
-        <span class="nav-icon">⭐</span>
-        <span data-i18n="navBookmarks">Vistað</span>
-    </button>
-</nav>
-
-<div class="modal-overlay" id="playerModal">
-    <div class="modal-container">
-        <div class="modal-header">
-            <div class="modal-title" id="modalVideoTitle">Myndband</div>
-            <button class="close-modal" id="closeModal">✕</button>
+<!-- Modal til að bæta við nýjum hlekk -->
+<div class="modal-overlay" id="addModal">
+    <div class="modal-form">
+        <h3>Bæta við nýjum tengli</h3>
+        <input type="text" id="inputTitle" placeholder="Titill myndbands / útsendingar">
+        <input type="text" id="inputAuthor" placeholder="Höfundur / Rás">
+        <input type="text" id="inputThumb" placeholder="Slóð á smámynd (Image URL)">
+        <input type="text" id="inputEmbed" placeholder="Slóð á myndband / Embed slóð">
+        <select id="inputPlatform">
+            <option value="youtube">YouTube</option>
+            <option value="twitch">Twitch</option>
+            <option value="odysee">Odysee</option>
+            <option value="rumble">Rumble</option>
+            <option value="vimeo">Vimeo</option>
+        </select>
+        <div class="modal-actions">
+            <button class="btn-cancel" id="closeAddModal">Hætta við</button>
+            <button class="btn-submit" id="saveVideoBtn">Vista tengil</button>
         </div>
-        <div class="player-wrapper" id="playerWrapper"></div>
-    </div>
-</div>
-
-<div class="bottom-sheet" id="langSheet">
-    <div class="sheet-header">
-        <div class="sheet-title" data-i18n="selectLanguage">Veldu Tungumál</div>
-        <button class="close-modal" id="closeLangSheet">✕</button>
-    </div>
-    <div class="lang-list">
-        <button class="lang-btn active" data-lang="is">🇮🇸 Íslenska</button>
-        <button class="lang-btn" data-lang="en">🇬🇧 English</button>
-        <button class="lang-btn" data-lang="es">🇪🇸 Español</button>
-        <button class="lang-btn" data-lang="de">🇩🇪 Deutsch</button>
     </div>
 </div>
 
 <script>
-    const translations = {
-        is: {
-            all: "Allar Veitur",
-            timeAll: "Allur Tími",
-            time1h: "⚡ Síðasta klst",
-            time24h: "24 Klukkustundir",
-            time7d: "Síðustu 7 dagar",
-            liveScanner: "CoreStream Vaktari Virkur",
-            noResults: "Engin myndbönd fundust miðað við þessar síur.",
-            selectLanguage: "Veldu Tungumál",
-            navHome: "Heim",
-            navTrending: "Vinsælt",
-            navBookmarks: "Vistað",
-            shareMsg: "Slóð afrituð á klippiborð!",
-            searchPlaceholder: "Leita í CoreStream..."
-        },
-        en: {
-            all: "All Platforms",
-            timeAll: "All Time",
-            time1h: "⚡ Past Hour",
-            time24h: "Past 24 Hours",
-            time7d: "Past 7 Days",
-            liveScanner: "CoreStream Engine Active",
-            noResults: "No videos found for selected filters.",
-            selectLanguage: "Select Language",
-            navHome: "Home",
-            navTrending: "Trending",
-            navBookmarks: "Saved",
-            shareMsg: "Link copied to clipboard!",
-            searchPlaceholder: "Search CoreStream..."
-        },
-        es: {
-            all: "Todas las Plataformas",
-            timeAll: "Todo el tiempo",
-            time1h: "⚡ Última hora",
-            time24h: "Últimas 24 horas",
-            time7d: "Últimos 7 días",
-            liveScanner: "Motor CoreStream Activo",
-            noResults: "No se encontraron vídeos.",
-            selectLanguage: "Seleccionar Idioma",
-            navHome: "Inicio",
-            navTrending: "Tendencias",
-            navBookmarks: "Guardados",
-            shareMsg: "¡Enlace copiado al portapapeles!",
-            searchPlaceholder: "Buscar en CoreStream..."
-        },
-        de: {
-            all: "Alle Plattformen",
-            timeAll: "Alle Zeit",
-            time1h: "⚡ Letzte Stunde",
-            time24h: "Letzte 24 Stunden",
-            time7d: "Letzte 7 Tage",
-            liveScanner: "CoreStream Engine Aktiv",
-            noResults: "Keine Videos gefunden.",
-            selectLanguage: "Sprache Wählen",
-            navHome: "Startseite",
-            navTrending: "Trends",
-            navBookmarks: "Gespeichert",
-            shareMsg: "Link in die Zwischenablage kopiert!",
-            searchPlaceholder: "CoreStream durchsuchen..."
-        }
-    };
-
-    let currentLang = 'is';
     let currentPlatform = 'all';
-    let currentTimeFilter = 'all';
-    let currentView = 'home';
-    let bookmarks = JSON.parse(localStorage.getItem('corestream_bookmarks') || '[]');
-
-    const sampleVideos = [
-        { id: "yt1", title: "SpaceX Starship Orbital Launch Test", platform: "youtube", author: "SpaceX", time: "10m ago", timestamp: Date.now() - 600000, duration: "12:45", views: "142K", thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ", isTrending: true },
-        { id: "tw1", title: "Championship Esports Final Live Stream", platform: "twitch", author: "ESL_CSGO", time: "25m ago", timestamp: Date.now() - 1500000, duration: "LIVE", views: "85K", thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost", isTrending: true },
-        { id: "od1", title: "Decentralized Tech Protocols Explored", platform: "odysee", author: "TechFreedom", time: "40m ago", timestamp: Date.now() - 2400000, duration: "18:20", views: "12K", thumb: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop", embed: "https://odysee.com/$/embed/example", isTrending: false },
-        { id: "rm1", title: "Independent Journalist Live Panel", platform: "rumble", author: "DailyNews", time: "2h ago", timestamp: Date.now() - 7200000, duration: "45:10", views: "34K", thumb: "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=600&auto=format&fit=crop", embed: "https://rumble.com/embed/v1/", isTrending: true },
-        { id: "bc1", title: "P2P Computing Architecture Talk", platform: "bitchute", author: "NodeDev", time: "5h ago", timestamp: Date.now() - 18000000, duration: "22:05", views: "8K", thumb: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&auto=format&fit=crop", embed: "https://www.bitchute.com/embed/example/", isTrending: false },
-        { id: "kc1", title: "High-Stakes Gaming Tournament Session", platform: "kick", author: "xQc", time: "15m ago", timestamp: Date.now() - 900000, duration: "LIVE", views: "62K", thumb: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop", embed: "https://player.kick.com/xqc", isTrending: true },
-        { id: "pt1", title: "Open Source Fediverse Documentary", platform: "peertube", author: "Framasoft", time: "1d ago", timestamp: Date.now() - 86400000, duration: "31:40", views: "19K", thumb: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop", embed: "https://peertube.tv/videos/embed/example", isTrending: false },
-        { id: "dm1", title: "European Cultural & Music Showcase", platform: "dailymotion", author: "EuroArts", time: "3d ago", timestamp: Date.now() - 259200000, duration: "08:15", views: "41K", thumb: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop", embed: "https://www.dailymotion.com/embed/video/x7zn25", isTrending: false },
-        { id: "vm1", title: "Minimalist Architectural Design Feature", platform: "vimeo", author: "DesignStudio", time: "4d ago", timestamp: Date.now() - 345600000, duration: "05:50", views: "95K", thumb: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&auto=format&fit=crop", embed: "https://player.vimeo.com/video/76979871", isTrending: true },
-        { id: "pl1", title: "Creator Freedom & Video Monetization", platform: "playeur", author: "CreatorHub", time: "6d ago", timestamp: Date.now() - 518400000, duration: "14:10", views: "15K", thumb: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&auto=format&fit=crop", embed: "https://playeur.com/embed/example", isTrending: false }
-    ];
+    
+    // Vistaðir tenglar í LocalStorage eða sjálfgefin sýnishorn
+    let linksDB = JSON.parse(localStorage.getItem('corestream_links') || JSON.stringify([
+        { id: "1", title: "SpaceX Starship Orbital Launch", author: "SpaceX", platform: "youtube", thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+        { id: "2", title: "Esports Championship Live", author: "ESL", platform: "twitch", thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" }
+    ]));
 
     const videoGrid = document.getElementById('videoGrid');
-    const emptyState = document.getElementById('emptyState');
     const searchInput = document.getElementById('searchInput');
-    const clearSearch = document.getElementById('clearSearch');
-    const playerModal = document.getElementById('playerModal');
-    const playerWrapper = document.getElementById('playerWrapper');
-    const modalVideoTitle = document.getElementById('modalVideoTitle');
-    const closeModal = document.getElementById('closeModal');
-    const langSheet = document.getElementById('langSheet');
+    const addModal = document.getElementById('addModal');
 
-    function renderVideos() {
+    function renderLinks() {
         const query = searchInput.value.toLowerCase().trim();
-        const now = Date.now();
-
-        const filtered = sampleVideos.filter(vid => {
-            if (currentView === 'trending' && !vid.isTrending) return false;
-            if (currentView === 'bookmarks' && !bookmarks.includes(vid.id)) return false;
-            if (currentPlatform !== 'all' && vid.platform !== currentPlatform) return false;
-            if (currentTimeFilter === '1h' && (now - vid.timestamp > 3600000)) return false;
-            if (currentTimeFilter === '24h' && (now - vid.timestamp > 86400000)) return false;
-            if (currentTimeFilter === '7d' && (now - vid.timestamp > 604800000)) return false;
-            if (query && !vid.title.toLowerCase().includes(query) && !vid.author.toLowerCase().includes(query)) return false;
+        const filtered = linksDB.filter(item => {
+            if (currentPlatform !== 'all' && item.platform !== currentPlatform) return false;
+            if (query && !item.title.toLowerCase().includes(query) && !item.author.toLowerCase().includes(query)) return false;
             return true;
         });
 
-        document.getElementById('videoCount').textContent = `${filtered.length} myndbönd`;
+        document.getElementById('videoCount').textContent = `${filtered.length} tenglar`;
 
-        if (filtered.length === 0) {
-            videoGrid.innerHTML = '';
-            emptyState.style.display = 'block';
+        videoGrid.innerHTML = filtered.map(item => `
+            <div class="video-card">
+                <div class="thumbnail-box" onclick="window.open('${item.embed}', '_blank')">
+                    <img src="${item.thumb}" alt="${item.title}" loading="lazy">
+                    <span class="card-badge">${item.platform}</span>
+                </div>
+                <div class="card-content">
+                    <div class="card-title" onclick="window.open('${item.embed}', '_blank')">${item.title}</div>
+                    <div class="card-meta">
+                        <span class="channel-name">${item.author}</span>
+                        <button class="delete-btn" onclick="deleteLink('${item.id}')" title="Eyða">Eyða</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    document.getElementById('openAddModal').addEventListener('click', () => addModal.classList.add('active'));
+    document.getElementById('closeAddModal').addEventListener('click', () => addModal.classList.remove('active'));
+
+    document.getElementById('saveVideoBtn').addEventListener('click', () => {
+        const title = document.getElementById('inputTitle').value.trim();
+        const author = document.getElementById('inputAuthor').value.trim();
+        const thumb = document.getElementById('inputThumb').value.trim();
+        const embed = document.getElementById('inputEmbed').value.trim();
+        const platform = document.getElementById('inputPlatform').value;
+
+        if (!title || !thumb || !embed) {
+            alert("Vinsamlegast fylltu út titil, smámynd og slóð.");
             return;
         }
 
-        emptyState.style.display = 'none';
-        videoGrid.innerHTML = filtered.map(vid => {
-            const isBookmarked = bookmarks.includes(vid.id);
-            return `
-                <div class="video-card">
-                    <div class="thumbnail-box" onclick="openPlayer('${vid.id}')">
-                        <img src="${vid.thumb}" alt="${vid.title}" loading="lazy">
-                        <span class="card-badge">${vid.platform}</span>
-                        <span class="duration-tag">${vid.duration}</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="card-title" onclick="openPlayer('${vid.id}')">${vid.title}</div>
-                        <div class="card-meta">
-                            <span class="channel-name">${vid.author}</span>
-                            <div class="card-actions">
-                                <button class="action-btn ${isBookmarked ? 'bookmarked' : ''}" onclick="toggleBookmark('${vid.id}')" title="Vista">
-                                    ${isBookmarked ? '★' : '☆'}
-                                </button>
-                                <button class="action-btn" onclick="shareVideo('${vid.title}')" title="Deila">
-                                    🔗
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
+        const newItem = {
+            id: Date.now().toString(),
+            title,
+            author: author || 'Óþekkt',
+            platform,
+            thumb,
+            embed
+        };
 
-    window.openPlayer = function(id) {
-        const vid = sampleVideos.find(v => v.id === id);
-        if (!vid) return;
-        modalVideoTitle.textContent = vid.title;
-        playerWrapper.innerHTML = `<iframe src="${vid.embed}" allowfullscreen allow="autoplay"></iframe>`;
-        playerModal.classList.add('active');
-    };
+        linksDB.unshift(newItem);
+        localStorage.setItem('corestream_links', JSON.stringify(linksDB));
+        addModal.classList.remove('active');
+        
+        document.getElementById('inputTitle').value = '';
+        document.getElementById('inputAuthor').value = '';
+        document.getElementById('inputThumb').value = '';
+        document.getElementById('inputEmbed').value = '';
 
-    closeModal.addEventListener('click', () => {
-        playerModal.classList.remove('active');
-        playerWrapper.innerHTML = '';
+        renderLinks();
     });
 
-    window.toggleBookmark = function(id) {
-        if (bookmarks.includes(id)) {
-            bookmarks = bookmarks.filter(b => b !== id);
-        } else {
-            bookmarks.push(id);
-        }
-        localStorage.setItem('corestream_bookmarks', JSON.stringify(bookmarks));
-        renderVideos();
-    };
-
-    window.shareVideo = function(title) {
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(window.location.href);
-            alert(translations[currentLang].shareMsg);
-        }
+    window.deleteLink = function(id) {
+        linksDB = linksDB.filter(i => i.id !== id);
+        localStorage.setItem('corestream_links', JSON.stringify(linksDB));
+        renderLinks();
     };
 
     document.getElementById('platformChips').addEventListener('click', (e) => {
@@ -936,28 +591,10 @@
         document.querySelectorAll('#platformChips .chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
         currentPlatform = chip.dataset.platform;
-        renderVideos();
+        renderLinks();
     });
 
-    document.getElementById('timeChips').addEventListener('click', (e) => {
-        const chip = e.target.closest('.chip');
-        if (!chip) return;
-        document.querySelectorAll('#timeChips .chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        currentTimeFilter = chip.dataset.time;
-        renderVideos();
-    });
-
-    searchInput.addEventListener('input', () => {
-        clearSearch.style.display = searchInput.value ? 'block' : 'none';
-        renderVideos();
-    });
-
-    clearSearch.addEventListener('click', () => {
-        searchInput.value = '';
-        clearSearch.style.display = 'none';
-        renderVideos();
-    });
+    searchInput.addEventListener('input', renderLinks);
 
     document.getElementById('themeToggle').addEventListener('click', () => {
         document.body.classList.toggle('light-theme');
@@ -965,52 +602,7 @@
         document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
     });
 
-    document.getElementById('langBtn').addEventListener('click', () => {
-        langSheet.classList.add('active');
-    });
-
-    document.getElementById('closeLangSheet').addEventListener('click', () => {
-        langSheet.classList.remove('active');
-    });
-
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentLang = btn.dataset.lang;
-            applyTranslations();
-            langSheet.classList.remove('active');
-            renderVideos();
-        });
-    });
-
-    function applyTranslations() {
-        const dict = translations[currentLang];
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.dataset.i18n;
-            if (dict[key]) {
-                el.textContent = dict[key];
-            }
-        });
-        searchInput.placeholder = dict.searchPlaceholder;
-    }
-
-    const navHome = document.getElementById('navHome');
-    const navTrending = document.getElementById('navTrending');
-    const navBookmarks = document.getElementById('navBookmarks');
-
-    function setActiveNav(navBtn, view) {
-        [navHome, navTrending, navBookmarks].forEach(b => b.classList.remove('active'));
-        navBtn.classList.add('active');
-        currentView = view;
-        renderVideos();
-    }
-
-    navHome.addEventListener('click', () => setActiveNav(navHome, 'home'));
-    navTrending.addEventListener('click', () => setActiveNav(navTrending, 'trending'));
-    navBookmarks.addEventListener('click', () => setActiveNav(navBookmarks, 'bookmarks'));
-
-    renderVideos();
+    renderLinks();
 </script>
 </body>
 </html>
