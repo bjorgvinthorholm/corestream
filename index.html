@@ -242,6 +242,7 @@
             <input type="text" id="searchInput" class="search-input" placeholder="Leita í safninu..." autocomplete="off">
         </div>
         
+        <!-- Fllatæk fellivalmynd fyrir ALLAR veitur sem passa við innsetningargluggann -->
         <select id="platformSelect" class="filter-select">
             <option value="all">🌟 Allar Veitur</option>
             <option value="youtube">YouTube</option>
@@ -317,7 +318,7 @@
 </div>
 
 <script>
-    // Fjölbreytt safn sjálfgefinna tengla fyrir allar veitur og flokka
+    // Sjálfgefin sýnishorn sem dekka allar helstu veitur og flokka
     const defaultLinks = [
         { id: "1", title: "SpaceX Starship Orbital Launch", author: "SpaceX", platform: "youtube", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
         { id: "2", title: "Esports Championship Live", author: "ESL", platform: "twitch", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" },
@@ -326,19 +327,21 @@
         { id: "5", title: "Independent Tech Report", author: "TechRumble", platform: "rumble", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop", embed: "https://rumble.com/embed/v1" },
         { id: "6", title: "Live Gaming Stream Highlights", author: "KickStreamer", platform: "kick", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&auto=format&fit=crop", embed: "https://kick.com" },
         { id: "7", title: "Open Source Documentary", author: "PeerTube Net", platform: "peertube", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop", embed: "https://joinpeertube.org" },
-        { id: "8", title: "World Music Festival Highlights", author: "Dailymotion Arts", platform: "dailymotion", category: "music", time: Date.now(), thumb: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop", embed: "https://www.dailymotion.com/embed/video/x7r1w9" }
+        { id: "8", title: "World Music Festival Highlights", author: "Dailymotion Arts", platform: "dailymotion", category: "music", time: Date.now(), thumb: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop", embed: "https://www.dailymotion.com/embed/video/x7r1w9" },
+        { id: "9", title: "Alternative Creator Showcase", author: "BitChute Hub", platform: "bitchute", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format&fit=crop", embed: "https://www.bitchute.com" },
+        { id: "10", title: "Next-Gen Playeur Showcase", author: "Playeur Live", platform: "playeur", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop", embed: "https://playeur.com" }
     ];
 
     let linksDB = defaultLinks;
     try {
-        let saved = localStorage.getItem('corestream_v6_expanded');
+        let saved = localStorage.getItem('corestream_v7_complete');
         if (saved) {
             let parsed = JSON.parse(saved);
             if (Array.isArray(parsed) && parsed.length > 0) {
                 linksDB = parsed;
             }
         } else {
-            localStorage.setItem('corestream_v6_expanded', JSON.stringify(defaultLinks));
+            localStorage.setItem('corestream_v7_complete', JSON.stringify(defaultLinks));
         }
     } catch(e) {
         linksDB = defaultLinks;
@@ -427,7 +430,7 @@
         };
 
         linksDB.unshift(newItem);
-        localStorage.setItem('corestream_v6_expanded', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v7_complete', JSON.stringify(linksDB));
         addModal.classList.remove('active');
         
         document.getElementById('inputTitle').value = '';
@@ -440,7 +443,7 @@
 
     window.deleteLink = function(id) {
         linksDB = linksDB.filter(i => i.id !== id);
-        localStorage.setItem('corestream_v6_expanded', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v7_complete', JSON.stringify(linksDB));
         renderLinks();
     };
 
