@@ -165,6 +165,15 @@
             cursor: pointer;
         }
 
+        .clean-btn {
+            background: #ef4444;
+            border: none; color: #fff;
+            padding: 0 14px; height: 38px;
+            border-radius: var(--radius-full);
+            font-size: 13px; font-weight: 600;
+            cursor: pointer;
+        }
+
         .live-bar {
             display: flex; align-items: center; justify-content: space-between;
             padding: 6px 10px; font-size: 11px; color: var(--text-muted);
@@ -302,6 +311,7 @@
         </select>
 
         <button class="fetch-btn" id="triggerFetchBtn">🔄 Sækja 10.000 Ný Efni</button>
+        <button class="clean-btn" id="cleanDupsBtn">🧹 Eyða Tvítekningum</button>
         <button class="add-btn" id="openAddModal">+ Bæta við</button>
     </div>
 
@@ -383,9 +393,38 @@
 
     let linksDB = [...defaultSeedData];
 
+    // Fall til að staðla titil (hreinsar stafbil og gerir allt að litlum stöfum)
+    function normalizeTitle(str) {
+        return (str || '').toLowerCase().trim().replace(/\s+/g, ' ');
+    }
+
+    // Sjálfvirk síun sem eyðir öllum tvítekningum miðað við titil
+    function removeDuplicatesFromDB() {
+        const seenTitles = new Set();
+        const uniqueDB = [];
+        let removedCount = 0;
+
+        for (const item of linksDB) {
+            const cleanT = normalizeTitle(item.title);
+            if (!seenTitles.has(cleanT)) {
+                seenTitles.add(cleanT);
+                uniqueDB.push(item);
+            } else {
+                removedCount++;
+            }
+        }
+
+        linksDB = uniqueDB;
+        try {
+            localStorage.setItem('corestream_v16_dedup', JSON.stringify(linksDB));
+        } catch (e) {}
+
+        return removedCount;
+    }
+
     function loadAndSyncData() {
         try {
-            let saved = localStorage.getItem('corestream_v15_10k');
+            let saved = localStorage.getItem('corestream_v16_dedup');
             if (saved) {
                 let parsed = JSON.parse(saved);
                 if (Array.isArray(parsed) && parsed.length > 0) {
@@ -397,12 +436,12 @@
         }
 
         defaultSeedData.forEach(seed => {
-            if (!linksDB.some(item => item.id === seed.id || item.title === seed.title)) {
+            if (!linksDB.some(item => normalizeTitle(item.title) === normalizeTitle(seed.title))) {
                 linksDB.push(seed);
             }
         });
 
-        localStorage.setItem('corestream_v15_10k', JSON.stringify(linksDB));
+        removeDuplicatesFromDB();
     }
 
     loadAndSyncData();
@@ -438,7 +477,7 @@
             return matchPlatform && matchCategory && matchTime && matchQuery;
         });
 
-        document.getElementById('videoCount').textContent = `${filtered.length} tenglar birtir (${linksDB.length} alls í safni)`;
+        document.getElementById('videoCount').textContent = `${filtered.length} tenglar birtir (${linksDB.length} alls án tvítekninga)`;
 
         if (filtered.length === 0) {
             videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px;">Engir tenglar fundust í þessari síu. Prófaðu "Allar Veitur" eða "Allir Flokkar".</div>';
@@ -486,21 +525,23 @@
         let addedCount = 0;
         let skippedCount = 0;
 
-        const existingTitles = new Set(linksDB.map(i => i.title));
+        const existingTitles = new Set(linksDB.map(i => normalizeTitle(i.title)));
 
         for (let i = 0; i < 10000; i++) {
             const platform = platforms[i % platforms.length];
             const category = categories[i % categories.length];
             const topic = topicPool[Math.floor(Math.random() * topicPool.length)];
-            const generatedTitle = `${topic.t} - ${platform.toUpperCase()} #${i + 1}`;
+            const generatedTitle = `${topic.t} #${i + 1}`;
+            const cleanGenerated = normalizeTitle(generatedTitle);
 
-            if (existingTitles.has(generatedTitle)) {
+            // Eyða tvítekningum: Hafna öllu sem hefur sama titil óháð veitu
+            if (existingTitles.has(cleanGenerated)) {
                 skippedCount++;
                 continue;
             }
 
             newBatch.push({
-                id: `mega10k_${baseTime}_${i}`,
+                id: `dedup10k_${baseTime}_${i}`,
                 title: generatedTitle,
                 author: `${topic.a} (${platform})`,
                 platform: platform,
@@ -510,26 +551,28 @@
                 embed: "https://youtube.com"
             });
             
-            existingTitles.add(generatedTitle);
+            existingTitles.add(cleanGenerated);
             addedCount++;
         }
 
         if (newBatch.length > 0) {
             linksDB = [...newBatch, ...linksDB];
-            try {
-                localStorage.setItem('corestream_v15_10k', JSON.stringify(linksDB));
-            } catch (e) {
-                console.warn("Storage quota limit reached, maintaining in memory");
-            }
+            removeDuplicatesFromDB();
             renderLinks();
-            alert(`Bætti við ${addedCount} nýjum tenglum! (${skippedCount} tvítekningar sleppt)`);
+            alert(`Bætti við ${addedCount} nýjum einkvæmum tenglum! (${skippedCount} tvítekningar síaðar út)`);
         } else {
-            alert("Engir nýir tenglar fundust sem voru ekki þegar til í safninu.");
+            alert("Öll þessi myndbönd eru þegar til í safninu þínu (sami titill).");
         }
     }
 
     document.getElementById('triggerFetchBtn').addEventListener('click', () => {
         fetch10000NewItems();
+    });
+
+    document.getElementById('cleanDupsBtn').addEventListener('click', () => {
+        const removed = removeDuplicatesFromDB();
+        renderLinks();
+        alert(`Hreinsun lokið! Eyddi ${removed} tvíteknum myndböndum úr safninu.`);
     });
 
     document.getElementById('openAddModal').addEventListener('click', () => addModal.classList.add('active'));
@@ -548,9 +591,10 @@
             return;
         }
 
-        const isDuplicate = linksDB.some(i => i.title.toLowerCase() === title.toLowerCase());
+        const cleanInputTitle = normalizeTitle(title);
+        const isDuplicate = linksDB.some(i => normalizeTitle(i.title) === cleanInputTitle);
         if (isDuplicate) {
-            alert("Þessi titill er þegar til í safninu!");
+            alert("Þetta myndband (sami titill) er þegar til í safninu!");
             return;
         }
 
@@ -566,9 +610,7 @@
         };
 
         linksDB.unshift(newItem);
-        try {
-            localStorage.setItem('corestream_v15_10k', JSON.stringify(linksDB));
-        } catch (e) {}
+        removeDuplicatesFromDB();
         addModal.classList.remove('active');
         
         document.getElementById('inputTitle').value = '';
@@ -582,7 +624,7 @@
     window.deleteLink = function(id) {
         linksDB = linksDB.filter(i => i.id !== id);
         try {
-            localStorage.setItem('corestream_v15_10k', JSON.stringify(linksDB));
+            localStorage.setItem('corestream_v16_dedup', JSON.stringify(linksDB));
         } catch (e) {}
         renderLinks();
     };
