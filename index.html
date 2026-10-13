@@ -280,7 +280,7 @@
             <option value="7d">Síðustu 7 dagar</option>
         </select>
 
-        <button class="fetch-btn" id="triggerFetchBtn">🔄 Sækja Nýtt Efni</button>
+        <button class="fetch-btn" id="triggerFetchBtn">🔄 Sækja 100 Ný Efni</button>
         <button class="add-btn" id="openAddModal">+ Bæta við</button>
     </div>
 
@@ -344,7 +344,7 @@
 
     function loadAndSyncData() {
         try {
-            let saved = localStorage.getItem('corestream_v10_final');
+            let saved = localStorage.getItem('corestream_v11_bulk');
             if (saved) {
                 let parsed = JSON.parse(saved);
                 if (Array.isArray(parsed) && parsed.length > 0) {
@@ -359,7 +359,7 @@
             }
         });
 
-        localStorage.setItem('corestream_v10_final', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v11_bulk', JSON.stringify(linksDB));
     }
 
     loadAndSyncData();
@@ -395,7 +395,7 @@
             return matchPlatform && matchCategory && matchTime && matchQuery;
         });
 
-        document.getElementById('videoCount').textContent = `${filtered.length} tenglar birtir (${linksDB.length} alls)`;
+        document.getElementById('videoCount').textContent = `${filtered.length} tenglar birtir (${linksDB.length} alls í safni)`;
 
         if (filtered.length === 0) {
             videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px;">Engir tenglar fundust í þessari síu. Prófaðu "Allar Veitur" eða "Allir Flokkar".</div>';
@@ -419,40 +419,48 @@
         `).join('');
     }
 
-    function fetchNewContent() {
+    // Fall sem býr til 100 nýja tengla í einu og dreifir þeim yfir allar veitur
+    function fetch100NewItems() {
         const platforms = ["youtube", "twitch", "odysee", "rumble", "bitchute", "kick", "peertube", "dailymotion", "vimeo", "playeur"];
         const categories = ["tech", "gaming", "news", "music"];
-        const randomPlatform = platforms[Math.floor(Math.random() * platforms.length)];
-        const randomCategory = categories[Math.floor(Math.random() * categories.length)];
         
-        const samples = [
-            { title: "Quantum Computing Breakthough 2026", author: "TechToday", thumb: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&auto=format&fit=crop" },
-            { title: "Live Speedrun Record Broken!", author: "GamerCentral", thumb: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop" },
-            { title: "A.I. & Future of Web Development", author: "CodeStream", thumb: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop" },
-            { title: "Acoustic Blues & Chill Live Performance", author: "LiveStage", thumb: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop" }
+        const topicPool = [
+            { t: "Quantum AI Breakthrough 2026", a: "TechPulse", thumb: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&auto=format&fit=crop" },
+            { t: "Pro Cyberpunk Gaming Highlights", a: "GamerHQ", thumb: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop" },
+            { t: "Global Geopolitics & Tech Future", a: "WorldNews", thumb: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop" },
+            { t: "Midnight Jazz & Blues Acoustic Live", a: "SoundVibe", thumb: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop" },
+            { t: "Next-Gen Engine 3D Graphics Test", a: "DevCentral", thumb: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop" },
+            { t: "Deep Space Exploration & Starship", a: "AstroNet", thumb: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop" }
         ];
 
-        const picked = samples[Math.floor(Math.random() * samples.length)];
+        let newBatch = [];
+        const baseTime = Date.now();
 
-        const newVideo = {
-            id: Date.now().toString(),
-            title: `[NÝTT] ${picked.title}`,
-            author: picked.author,
-            platform: randomPlatform,
-            category: randomCategory,
-            time: Date.now(),
-            thumb: picked.thumb,
-            embed: "https://youtube.com"
-        };
+        for (let i = 0; i < 100; i++) {
+            const platform = platforms[i % platforms.length];
+            const category = categories[i % categories.length];
+            const topic = topicPool[Math.floor(Math.random() * topicPool.length)];
 
-        linksDB.unshift(newVideo);
-        localStorage.setItem('corestream_v10_final', JSON.stringify(linksDB));
+            newBatch.push({
+                id: `bulk_${baseTime}_${i}`,
+                title: `${topic.t} #${i + 1}`,
+                author: `${topic.a} ${platform.toUpperCase()}`,
+                platform: platform,
+                category: category,
+                time: baseTime - (i * 60000), // dreifist yfir síðustu klukkustundir
+                thumb: topic.thumb,
+                embed: "https://youtube.com"
+            });
+        }
+
+        linksDB = [...newBatch, ...linksDB];
+        localStorage.setItem('corestream_v11_bulk', JSON.stringify(linksDB));
         renderLinks();
     }
 
     document.getElementById('triggerFetchBtn').addEventListener('click', () => {
-        fetchNewContent();
-        alert("Nýju efni hefur verið bætt við!");
+        fetch100NewItems();
+        alert("100 nýjum tenglum hefur verið bætt við safnið!");
     });
 
     document.getElementById('openAddModal').addEventListener('click', () => addModal.classList.add('active'));
@@ -483,7 +491,7 @@
         };
 
         linksDB.unshift(newItem);
-        localStorage.setItem('corestream_v10_final', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v11_bulk', JSON.stringify(linksDB));
         addModal.classList.remove('active');
         
         document.getElementById('inputTitle').value = '';
@@ -492,26 +500,3 @@
         document.getElementById('inputEmbed').value = '';
 
         renderLinks();
-    });
-
-    window.deleteLink = function(id) {
-        linksDB = linksDB.filter(i => i.id !== id);
-        localStorage.setItem('corestream_v10_final', JSON.stringify(linksDB));
-        renderLinks();
-    };
-
-    platformSelect.addEventListener('change', renderLinks);
-    categorySelect.addEventListener('change', renderLinks);
-    timeSelect.addEventListener('change', renderLinks);
-    searchInput.addEventListener('input', renderLinks);
-
-    document.getElementById('themeToggle').addEventListener('click', () => {
-        document.body.classList.toggle('light-theme');
-        const isLight = document.body.classList.contains('light-theme');
-        document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
-    });
-
-    renderLinks();
-</script>
-</body>
-</html>
