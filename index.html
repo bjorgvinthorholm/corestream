@@ -393,12 +393,15 @@
 
     let linksDB = [...defaultSeedData];
 
-    // Fall til að staðla titil (hreinsar stafbil og gerir allt að litlum stöfum)
+    // Nákvæm hreinsun á titli til að finna tvítekningar óháð númerum (t.d. #1, #2) og stafsetningu
     function normalizeTitle(str) {
-        return (str || '').toLowerCase().trim().replace(/\s+/g, ' ');
+        if (!str) return '';
+        return str.toLowerCase()
+                  .replace(/#\d+/g, '') // Fjarlægir t.d. #1, #2 o.s.frv.
+                  .replace(/\s+/g, ' ')
+                  .trim();
     }
 
-    // Sjálfvirk síun sem eyðir öllum tvítekningum miðað við titil
     function removeDuplicatesFromDB() {
         const seenTitles = new Set();
         const uniqueDB = [];
@@ -416,7 +419,7 @@
 
         linksDB = uniqueDB;
         try {
-            localStorage.setItem('corestream_v16_dedup', JSON.stringify(linksDB));
+            localStorage.setItem('corestream_v17_clean', JSON.stringify(linksDB));
         } catch (e) {}
 
         return removedCount;
@@ -424,7 +427,7 @@
 
     function loadAndSyncData() {
         try {
-            let saved = localStorage.getItem('corestream_v16_dedup');
+            let saved = localStorage.getItem('corestream_v17_clean');
             if (saved) {
                 let parsed = JSON.parse(saved);
                 if (Array.isArray(parsed) && parsed.length > 0) {
@@ -534,14 +537,13 @@
             const generatedTitle = `${topic.t} #${i + 1}`;
             const cleanGenerated = normalizeTitle(generatedTitle);
 
-            // Eyða tvítekningum: Hafna öllu sem hefur sama titil óháð veitu
             if (existingTitles.has(cleanGenerated)) {
                 skippedCount++;
                 continue;
             }
 
             newBatch.push({
-                id: `dedup10k_${baseTime}_${i}`,
+                id: `clean10k_${baseTime}_${i}`,
                 title: generatedTitle,
                 author: `${topic.a} (${platform})`,
                 platform: platform,
@@ -561,7 +563,7 @@
             renderLinks();
             alert(`Bætti við ${addedCount} nýjum einkvæmum tenglum! (${skippedCount} tvítekningar síaðar út)`);
         } else {
-            alert("Öll þessi myndbönd eru þegar til í safninu þínu (sami titill).");
+            alert("Öll þessi myndbönd eru þegar til í safninu þínu.");
         }
     }
 
@@ -624,7 +626,7 @@
     window.deleteLink = function(id) {
         linksDB = linksDB.filter(i => i.id !== id);
         try {
-            localStorage.setItem('corestream_v16_dedup', JSON.stringify(linksDB));
+            localStorage.setItem('corestream_v17_clean', JSON.stringify(linksDB));
         } catch (e) {}
         renderLinks();
     };
