@@ -1,4 +1,4 @@
-  "name": "CoreStream",
+**  "name": "CoreStream",
   "short_name": "CoreStream",
   "description": "Global Multi-Platform Video Portal",
   "start_url": "./index.html",
@@ -18,3 +18,4 @@
     }
   ]
 }
+**
