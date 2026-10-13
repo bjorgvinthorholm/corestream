@@ -513,18 +513,25 @@
     let currentCategory = 'all';
     let currentTimeFilter = 'all';
     
-    // Sjálfgefin sýnishorn ef geymslan er tóm eða vantar flokka
+    // Sjálfgefin sýnishorn með réttum flokkum
     const defaultLinks = [
         { id: "1", title: "SpaceX Starship Orbital Launch", author: "SpaceX", platform: "youtube", category: "tech", timestamp: Date.now() - 600000, thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
         { id: "2", title: "Esports Championship Live", author: "ESL", platform: "twitch", category: "gaming", timestamp: Date.now() - 1500000, thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" }
     ];
 
-    let storedLinks = JSON.parse(localStorage.getItem('corestream_links') || '[]');
-    if (storedLinks.length === 0 || !storedLinks[0].category) {
-        storedLinks = defaultLinks;
-        localStorage.setItem('corestream_links', JSON.stringify(storedLinks));
+    let linksDB;
+    try {
+        let stored = JSON.parse(localStorage.getItem('corestream_links') || '[]');
+        // Athugum hvort gömlu gögnin vanti flokk og endurstillum ef þörf krefur
+        if (!Array.isArray(stored) || stored.length === 0 || !stored[0].category) {
+            linksDB = defaultLinks;
+            localStorage.setItem('corestream_links', JSON.stringify(linksDB));
+        } else {
+            linksDB = stored;
+        }
+    } catch(e) {
+        linksDB = defaultLinks;
     }
-    let linksDB = storedLinks;
 
     const videoGrid = document.getElementById('videoGrid');
     const searchInput = document.getElementById('searchInput');
@@ -548,6 +555,11 @@
         });
 
         document.getElementById('videoCount').textContent = `${filtered.length} tenglar`;
+
+        if (filtered.length === 0) {
+            videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">Engir tenglar fundust miðað við þessar síur.</div>';
+            return;
+        }
 
         videoGrid.innerHTML = filtered.map(item => `
             <div class="video-card">
