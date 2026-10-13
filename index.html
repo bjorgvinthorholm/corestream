@@ -156,6 +156,15 @@
             cursor: pointer;
         }
 
+        .fetch-btn {
+            background: #10b981;
+            border: none; color: #fff;
+            padding: 0 14px; height: 38px;
+            border-radius: var(--radius-full);
+            font-size: 13px; font-weight: 600;
+            cursor: pointer;
+        }
+
         .live-bar {
             display: flex; align-items: center; justify-content: space-between;
             padding: 6px 10px; font-size: 11px; color: var(--text-muted);
@@ -242,7 +251,6 @@
             <input type="text" id="searchInput" class="search-input" placeholder="Leita í safninu..." autocomplete="off">
         </div>
         
-        <!-- Fllatæk fellivalmynd fyrir ALLAR veitur sem passa við innsetningargluggann -->
         <select id="platformSelect" class="filter-select">
             <option value="all">🌟 Allar Veitur</option>
             <option value="youtube">YouTube</option>
@@ -272,11 +280,12 @@
             <option value="7d">Síðustu 7 dagar</option>
         </select>
 
+        <button class="fetch-btn" id="triggerFetchBtn">🔄 Sækja Nýtt Efni</button>
         <button class="add-btn" id="openAddModal">+ Bæta við</button>
     </div>
 
     <div class="live-bar">
-        <span>CoreStream Vaktari Virkur</span>
+        <span>CoreStream Vaktari Virkur (Efnisnámskerfi)</span>
         <span id="videoCount">0 tenglar</span>
     </div>
 
@@ -318,34 +327,45 @@
 </div>
 
 <script>
-    // Sjálfgefin sýnishorn sem dekka allar helstu veitur og flokka
-    const defaultLinks = [
-        { id: "1", title: "SpaceX Starship Orbital Launch", author: "SpaceX", platform: "youtube", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-        { id: "2", title: "Esports Championship Live", author: "ESL", platform: "twitch", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" },
-        { id: "3", title: "Global Breaking News Stream", author: "NewsNet", platform: "odysee", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&auto=format&fit=crop", embed: "https://odysee.com/$/embed/@news:f" },
-        { id: "4", title: "Ambient Jazz & Blues Session", author: "ChillCafe", platform: "vimeo", category: "music", time: Date.now(), thumb: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop", embed: "https://player.vimeo.com/video/76979871" },
-        { id: "5", title: "Independent Tech Report", author: "TechRumble", platform: "rumble", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop", embed: "https://rumble.com/embed/v1" },
-        { id: "6", title: "Live Gaming Stream Highlights", author: "KickStreamer", platform: "kick", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&auto=format&fit=crop", embed: "https://kick.com" },
-        { id: "7", title: "Open Source Documentary", author: "PeerTube Net", platform: "peertube", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop", embed: "https://joinpeertube.org" },
-        { id: "8", title: "World Music Festival Highlights", author: "Dailymotion Arts", platform: "dailymotion", category: "music", time: Date.now(), thumb: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop", embed: "https://www.dailymotion.com/embed/video/x7r1w9" },
-        { id: "9", title: "Alternative Creator Showcase", author: "BitChute Hub", platform: "bitchute", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format&fit=crop", embed: "https://www.bitchute.com" },
-        { id: "10", title: "Next-Gen Playeur Showcase", author: "Playeur Live", platform: "playeur", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop", embed: "https://playeur.com" }
+    // Upphaflegt safn fyrir allar 10 veiturnar
+    const defaultSeedData = [
+        { id: "seed_1", title: "SpaceX Starship Orbital Test Flight", author: "SpaceX", platform: "youtube", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+        { id: "seed_2", title: "World Esports Finals Live Stream", author: "ESL Gaming", platform: "twitch", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" },
+        { id: "seed_3", title: "Decentralized Web & Open Tech Daily", author: "Odysee Tech", platform: "odysee", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&auto=format&fit=crop", embed: "https://odysee.com" },
+        { id: "seed_4", title: "Deep Space Exploration & Astronomy", author: "Vimeo Science", platform: "vimeo", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop", embed: "https://player.vimeo.com/video/76979871" },
+        { id: "seed_5", title: "Independent Tech & Hardware Analysis", author: "TechRumble", platform: "rumble", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop", embed: "https://rumble.com" },
+        { id: "seed_6", title: "High Octane FPS Gaming Finals", author: "KickStreamer", platform: "kick", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&auto=format&fit=crop", embed: "https://kick.com" },
+        { id: "7", title: "PeerTube Open Source Media Documentary", author: "PeerTube", platform: "peertube", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop", embed: "https://joinpeertube.org" },
+        { id: "8", title: "Global Electro & Jazz Music Live Sessions", author: "Dailymotion Sound", platform: "dailymotion", category: "music", time: Date.now(), thumb: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop", embed: "https://www.dailymotion.com" },
+        { id: "9", title: "Freedom & Open Source Software Debate", author: "BitChute Media", platform: "bitchute", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format&fit=crop", embed: "https://www.bitchute.com" },
+        { id: "10", title: "Playeur Creator Exclusive Showcase", author: "Playeur HQ", platform: "playeur", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop", embed: "https://playeur.com" }
     ];
 
-    let linksDB = defaultLinks;
-    try {
-        let saved = localStorage.getItem('corestream_v7_complete');
-        if (saved) {
-            let parsed = JSON.parse(saved);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-                linksDB = parsed;
+    let linksDB = [];
+
+    // Sækjum geymd gögn OG sameinum við sjálfgefnu gögnin svo ekkert vanti
+    function loadAndSyncData() {
+        try {
+            let saved = localStorage.getItem('corestream_v9_engine');
+            if (saved) {
+                let parsed = JSON.parse(saved);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    linksDB = parsed;
+                }
             }
-        } else {
-            localStorage.setItem('corestream_v7_complete', JSON.stringify(defaultLinks));
-        }
-    } catch(e) {
-        linksDB = defaultLinks;
+        } catch(e) {}
+
+        // Ef einhvern sjálfgefinn tengil vantar, bætum við honum við
+        defaultSeedData.forEach(seed => {
+            if (!linksDB.some(item => item.id === seed.id)) {
+                linksDB.push(seed);
+            }
+        });
+
+        localStorage.setItem('corestream_v9_engine', JSON.stringify(linksDB));
     }
+
+    loadAndSyncData();
 
     const videoGrid = document.getElementById('videoGrid');
     const searchInput = document.getElementById('searchInput');
@@ -378,10 +398,10 @@
             return matchPlatform && matchCategory && matchTime && matchQuery;
         });
 
-        document.getElementById('videoCount').textContent = `${filtered.length} tenglar`;
+        document.getElementById('videoCount').textContent = `${filtered.length} tenglar birtir (${linksDB.length} alls)`;
 
         if (filtered.length === 0) {
-            videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px;">Engir tenglar fundust í þessari síu.</div>';
+            videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px;">Engir tenglar fundust í þessari síu. Prófaðu "Allar Veitur" eða "Allir Flokkar".</div>';
             return;
         }
 
@@ -401,6 +421,43 @@
             </div>
         `).join('');
     }
+
+    // Hermir eftir því að sækja nýtt efni úr ytri RSS/API veitum
+    function fetchNewContent() {
+        const platforms = ["youtube", "twitch", "odysee", "rumble", "bitchute", "kick", "peertube", "dailymotion", "vimeo", "playeur"];
+        const categories = ["tech", "gaming", "news", "music"];
+        const randomPlatform = platforms[Math.floor(Math.random() * platforms.length)];
+        const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+        
+        const samples = [
+            { title: "New Quantum Computing Breakthough 2026", author: "TechToday", thumb: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&auto=format&fit=crop" },
+            { title: "Live Speedrun Record Broken!", author: "GamerCentral", thumb: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop" },
+            { title: "A.I. & Future of Web Development", author: "CodeStream", thumb: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop" },
+            { title: "Acoustic Blues & Chill Live Performance", author: "LiveStage", thumb: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop" }
+        ];
+
+        const picked = samples[Math.floor(Math.random() * samples.length)];
+
+        const newVideo = {
+            id: Date.now().toString(),
+            title: `[NÝTT] ${picked.title}`,
+            author: picked.author,
+            platform: randomPlatform,
+            category: randomCategory,
+            time: Date.now(),
+            thumb: picked.thumb,
+            embed: "https://youtube.com"
+        };
+
+        linksDB.unshift(newVideo);
+        localStorage.setItem('corestream_v9_engine', JSON.stringify(linksDB));
+        renderLinks();
+    }
+
+    document.getElementById('triggerFetchBtn').addEventListener('click', () => {
+        fetchNewContent();
+        alert("Nýju efni hefur verið bætt við!");
+    });
 
     document.getElementById('openAddModal').addEventListener('click', () => addModal.classList.add('active'));
     document.getElementById('closeAddModal').addEventListener('click', () => addModal.classList.remove('active'));
@@ -430,7 +487,7 @@
         };
 
         linksDB.unshift(newItem);
-        localStorage.setItem('corestream_v7_complete', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v9_engine', JSON.stringify(linksDB));
         addModal.classList.remove('active');
         
         document.getElementById('inputTitle').value = '';
@@ -443,7 +500,7 @@
 
     window.deleteLink = function(id) {
         linksDB = linksDB.filter(i => i.id !== id);
-        localStorage.setItem('corestream_v7_complete', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v9_engine', JSON.stringify(linksDB));
         renderLinks();
     };
 
