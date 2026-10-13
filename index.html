@@ -248,7 +248,12 @@
             <option value="twitch">Twitch</option>
             <option value="odysee">Odysee</option>
             <option value="rumble">Rumble</option>
+            <option value="bitchute">BitChute</option>
+            <option value="kick">Kick</option>
+            <option value="peertube">PeerTube</option>
+            <option value="dailymotion">Dailymotion</option>
             <option value="vimeo">Vimeo</option>
+            <option value="playeur">Playeur</option>
         </select>
 
         <select id="categorySelect" class="filter-select">
@@ -291,7 +296,12 @@
             <option value="twitch">Twitch</option>
             <option value="odysee">Odysee</option>
             <option value="rumble">Rumble</option>
+            <option value="bitchute">BitChute</option>
+            <option value="kick">Kick</option>
+            <option value="peertube">PeerTube</option>
+            <option value="dailymotion">Dailymotion</option>
             <option value="vimeo">Vimeo</option>
+            <option value="playeur">Playeur</option>
         </select>
         <select id="inputCategory">
             <option value="tech">Tækni & Vísindi</option>
@@ -307,24 +317,28 @@
 </div>
 
 <script>
-    // Sjálfgefin sýnishorn fyrir alla flokka
+    // Fjölbreytt safn sjálfgefinna tengla fyrir allar veitur og flokka
     const defaultLinks = [
         { id: "1", title: "SpaceX Starship Orbital Launch", author: "SpaceX", platform: "youtube", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=600&auto=format&fit=crop", embed: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
         { id: "2", title: "Esports Championship Live", author: "ESL", platform: "twitch", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop", embed: "https://player.twitch.tv/?channel=esl_csgo&parent=localhost" },
         { id: "3", title: "Global Breaking News Stream", author: "NewsNet", platform: "odysee", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&auto=format&fit=crop", embed: "https://odysee.com/$/embed/@news:f" },
-        { id: "4", title: "Ambient Jazz & Blues Session", author: "ChillCafe", platform: "vimeo", category: "music", time: Date.now(), thumb: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop", embed: "https://player.vimeo.com/video/76979871" }
+        { id: "4", title: "Ambient Jazz & Blues Session", author: "ChillCafe", platform: "vimeo", category: "music", time: Date.now(), thumb: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop", embed: "https://player.vimeo.com/video/76979871" },
+        { id: "5", title: "Independent Tech Report", author: "TechRumble", platform: "rumble", category: "tech", time: Date.now(), thumb: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop", embed: "https://rumble.com/embed/v1" },
+        { id: "6", title: "Live Gaming Stream Highlights", author: "KickStreamer", platform: "kick", category: "gaming", time: Date.now(), thumb: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&auto=format&fit=crop", embed: "https://kick.com" },
+        { id: "7", title: "Open Source Documentary", author: "PeerTube Net", platform: "peertube", category: "news", time: Date.now(), thumb: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop", embed: "https://joinpeertube.org" },
+        { id: "8", title: "World Music Festival Highlights", author: "Dailymotion Arts", platform: "dailymotion", category: "music", time: Date.now(), thumb: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop", embed: "https://www.dailymotion.com/embed/video/x7r1w9" }
     ];
 
     let linksDB = defaultLinks;
     try {
-        let saved = localStorage.getItem('corestream_v5_fresh');
+        let saved = localStorage.getItem('corestream_v6_expanded');
         if (saved) {
             let parsed = JSON.parse(saved);
             if (Array.isArray(parsed) && parsed.length > 0) {
                 linksDB = parsed;
             }
         } else {
-            localStorage.setItem('corestream_v5_fresh', JSON.stringify(defaultLinks));
+            localStorage.setItem('corestream_v6_expanded', JSON.stringify(defaultLinks));
         }
     } catch(e) {
         linksDB = defaultLinks;
@@ -413,7 +427,7 @@
         };
 
         linksDB.unshift(newItem);
-        localStorage.setItem('corestream_v5_fresh', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v6_expanded', JSON.stringify(linksDB));
         addModal.classList.remove('active');
         
         document.getElementById('inputTitle').value = '';
@@ -426,7 +440,7 @@
 
     window.deleteLink = function(id) {
         linksDB = linksDB.filter(i => i.id !== id);
-        localStorage.setItem('corestream_v5_fresh', JSON.stringify(linksDB));
+        localStorage.setItem('corestream_v6_expanded', JSON.stringify(linksDB));
         renderLinks();
     };
 
